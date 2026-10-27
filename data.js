@@ -1,0 +1,252 @@
+// Contenu pédagogique : leçons, quiz et glossaire.
+// Chaque question : { q, o: [options], a: index de la bonne réponse, e: explication }
+
+const LESSONS = [
+  {
+    id: "bourse",
+    title: "1. Comment fonctionne la bourse ?",
+    level: "Débutant",
+    html: `
+      <p>Une <strong>bourse</strong> est un marché organisé où des acheteurs et des vendeurs échangent des titres financiers (actions, obligations, ETF…). Le prix se forme par la rencontre de l'<strong>offre</strong> et de la <strong>demande</strong>.</p>
+      <h4>Pourquoi les entreprises cotent en bourse</h4>
+      <p>Pour lever de l'argent sans emprunter : elles vendent des parts de leur capital (les <em>actions</em>). L'acheteur devient <strong>actionnaire</strong> : il possède une petite fraction de l'entreprise.</p>
+      <h4>Comment un actionnaire gagne de l'argent</h4>
+      <ul>
+        <li><strong>Plus-value</strong> : tu revends plus cher que tu n'as acheté.</li>
+        <li><strong>Dividendes</strong> : l'entreprise redistribue une partie de ses bénéfices.</li>
+      </ul>
+      <h4>Le carnet d'ordres</h4>
+      <p>Chaque titre a un carnet d'ordres : à gauche les acheteurs (prix <em>bid</em>), à droite les vendeurs (prix <em>ask</em>). L'écart entre les deux s'appelle le <strong>spread</strong>. Une transaction a lieu quand un acheteur et un vendeur s'accordent sur un prix.</p>
+      <div class="note">À retenir : en bourse, il n'y a pas de gain garanti. Le prix monte parce que plus de gens veulent acheter que vendre, et inversement.</div>`,
+    quiz: [
+      { q: "Qu'est-ce qu'une action ?", o: ["Un prêt fait à une entreprise", "Une part du capital d'une entreprise", "Une assurance contre les pertes", "Un contrat à durée limitée"], a: 1, e: "Une action représente une fraction de propriété de l'entreprise. Un prêt, c'est une obligation." },
+      { q: "Qu'est-ce que le spread ?", o: ["L'écart entre le prix d'achat (ask) et de vente (bid)", "Le dividende annuel", "La commission du courtier", "La variation sur une journée"], a: 0, e: "Le spread est la différence entre le meilleur prix vendeur et le meilleur prix acheteur." },
+      { q: "Qu'est-ce qui fait varier le prix d'une action au quotidien ?", o: ["Une décision quotidienne de l'État", "L'offre et la demande", "Le courtier", "Le prix est fixé une fois par an"], a: 1, e: "Le prix résulte de la confrontation des ordres d'achat et de vente." }
+    ]
+  },
+  {
+    id: "produits",
+    title: "2. Actions, ETF, obligations : les produits",
+    level: "Débutant",
+    html: `
+      <h4>Actions</h4>
+      <p>Potentiel de gain élevé, mais risque de perte réelle. Le cours d'une seule entreprise peut chuter fortement (voire à zéro).</p>
+      <h4>ETF (trackers)</h4>
+      <p>Un <strong>ETF</strong> est un fonds coté qui réplique un indice (ex. : le CAC 40, le S&amp;P 500, le MSCI World). En un seul achat, tu détiens des centaines d'entreprises : c'est la <strong>diversification</strong> instantanée, avec des frais faibles.</p>
+      <h4>Obligations</h4>
+      <p>Tu prêtes de l'argent à un État ou une entreprise, qui te verse des intérêts (le <em>coupon</em>) et te rembourse à l'échéance. Moins risqué en général, rendement plus faible.</p>
+      <h4>Produits à éviter en début de parcours</h4>
+      <ul>
+        <li><strong>CFD, options, turbos, futures</strong> : ils utilisent le <em>levier</em>. Tu peux perdre plus vite que ce que tu imagines.</li>
+        <li><strong>Cryptos et micro-capitalisations</strong> : très volatils.</li>
+      </ul>
+      <div class="note">Règle simple : pour apprendre, commence par comprendre les actions et les ETF. Le reste viendra plus tard.</div>`,
+    quiz: [
+      { q: "Quel est le principal avantage d'un ETF indiciel ?", o: ["Il garantit le capital", "Il diversifie sur de nombreuses entreprises avec peu de frais", "Il rapporte toujours plus qu'une action", "Il est exempt de risque"], a: 1, e: "Un ETF réplique un indice : tu es exposé à beaucoup de sociétés d'un coup, avec des frais faibles. Il reste soumis au risque de marché." },
+      { q: "Une obligation, c'est…", o: ["Une part de propriété", "Un prêt rémunéré par des intérêts", "Un type de dividende", "Un ordre de bourse"], a: 1, e: "Tu prêtes à l'émetteur, qui te verse un coupon et te rembourse à l'échéance (sauf défaut)." },
+      { q: "Pourquoi éviter le levier quand on débute ?", o: ["Il est interdit", "Il amplifie aussi bien les gains que les pertes", "Il n'amplifie que les gains", "Il supprime les frais"], a: 1, e: "Le levier multiplie les gains ET les pertes ; un petit mouvement contraire peut effacer ton capital." }
+    ]
+  },
+  {
+    id: "graphique",
+    title: "3. Lire un graphique en chandeliers",
+    level: "Débutant",
+    html: `
+      <p>Un <strong>chandelier japonais</strong> résume une période (une journée, une heure…) avec 4 prix :</p>
+      <ul>
+        <li><strong>Open</strong> (ouverture) et <strong>Close</strong> (clôture) : le « corps » du chandelier.</li>
+        <li><strong>High</strong> (plus haut) et <strong>Low</strong> (plus bas) : les « mèches ».</li>
+      </ul>
+      <p>Chandelier <span style="color:var(--up)">vert/haussier</span> : clôture &gt; ouverture. Chandelier <span style="color:var(--down)">rouge/baissier</span> : clôture &lt; ouverture.</p>
+      <h4>Ce que racontent les mèches</h4>
+      <p>Une longue mèche haute = les acheteurs ont poussé, mais les vendeurs ont repris la main (rejet du haut). Une longue mèche basse = rebond après une baisse.</p>
+      <h4>Les échelles de temps</h4>
+      <p>Le graphique journalier donne une vision de moyen terme. Plus l'unité de temps est courte, plus il y a de « bruit » (mouvements aléatoires sans signification). Un débutant a tout intérêt à travailler sur des échelles <strong>journalières ou hebdomadaires</strong>.</p>
+      <div class="note">Dans l'onglet <em>Simulateur</em>, survole le graphique pour voir O/H/L/C de chaque bougie.</div>`,
+    quiz: [
+      { q: "Un chandelier haussier signifie que…", o: ["La clôture est supérieure à l'ouverture", "La clôture est inférieure à l'ouverture", "Le volume est élevé", "Le plus haut égale l'ouverture"], a: 0, e: "Haussier = le prix a fini plus haut qu'il n'a commencé la période." },
+      { q: "Que représentent les mèches ?", o: ["Les dividendes", "Les extrêmes (plus haut / plus bas) atteints pendant la période", "Le volume échangé", "Les frais"], a: 1, e: "Les mèches montrent jusqu'où le prix est allé avant de revenir vers le corps." },
+      { q: "Pourquoi les très petites échelles de temps sont-elles plus difficiles pour un débutant ?", o: ["Il y a davantage de bruit aléatoire", "Elles sont interdites", "Les frais disparaissent", "Les prix sont plus faciles à prédire"], a: 0, e: "Sur des échelles courtes, le hasard domine et les frais se cumulent vite." }
+    ]
+  },
+  {
+    id: "ordres",
+    title: "4. Les types d'ordres",
+    level: "Débutant",
+    html: `
+      <h4>Ordre au marché</h4>
+      <p>Exécuté tout de suite au meilleur prix disponible. Rapide, mais le prix obtenu peut différer de celui affiché (<em>slippage</em>), surtout sur les titres peu échangés.</p>
+      <h4>Ordre à cours limité</h4>
+      <p>Tu fixes le prix maximum d'achat (ou minimum de vente). Tu contrôles le prix, mais l'ordre peut ne jamais être exécuté.</p>
+      <h4>Ordre stop (stop-loss)</h4>
+      <p>Se déclenche si le prix touche un seuil défavorable, pour <strong>limiter la perte</strong>. Exemple : tu achètes à 100 €, tu places un stop à 95 € : si le cours tombe à 95 €, tu sors avec ~5 % de perte au lieu de subir une chute plus grande.</p>
+      <h4>Objectif (take-profit)</h4>
+      <p>Ordre de vente à un prix cible pour sécuriser le gain.</p>
+      <div class="note">Attention aux <em>gaps</em> : si le titre ouvre bien en dessous de ton stop (mauvaise nouvelle pendant la nuit), tu sors au prix d'ouverture, donc plus bas que prévu. Le simulateur reproduit ce cas.</div>`,
+    quiz: [
+      { q: "Quel ordre te garantit un prix maximum à l'achat ?", o: ["Ordre au marché", "Ordre à cours limité", "Ordre stop", "Aucun"], a: 1, e: "Avec un ordre limité, tu ne paies jamais plus que ton prix, mais il peut ne pas être exécuté." },
+      { q: "À quoi sert un stop-loss ?", o: ["À augmenter les gains", "À limiter la perte maximale sur une position", "À éviter les frais", "À acheter moins cher"], a: 1, e: "Le stop sort automatiquement de la position quand le cours atteint un seuil défini." },
+      { q: "Un titre ouvre à 90 € alors que ton stop est à 95 €. À quel prix sors-tu ?", o: ["95 €", "Environ 90 € (prix d'ouverture)", "100 €", "Tu ne sors pas"], a: 1, e: "En cas de gap, le stop est exécuté au premier prix disponible, ici l'ouverture à 90 €." }
+    ]
+  },
+  {
+    id: "technique",
+    title: "5. Analyse technique : tendance, moyennes, RSI",
+    level: "Intermédiaire",
+    html: `
+      <p>L'<strong>analyse technique</strong> étudie le graphique pour repérer des tendances et des zones de prix. Elle ne prédit pas l'avenir : elle aide à construire un <em>plan</em> avec des niveaux clairs.</p>
+      <h4>Tendance</h4>
+      <ul>
+        <li><strong>Haussière</strong> : une suite de sommets et de creux de plus en plus hauts.</li>
+        <li><strong>Baissière</strong> : sommets et creux de plus en plus bas.</li>
+        <li><strong>Latérale</strong> : le prix oscille entre un support et une résistance.</li>
+      </ul>
+      <h4>Support et résistance</h4>
+      <p>Un <strong>support</strong> est un niveau où le prix a déjà rebondi plusieurs fois ; une <strong>résistance</strong> est un niveau où il a déjà butté. Quand un niveau est cassé, il change souvent de rôle.</p>
+      <h4>Moyennes mobiles (SMA)</h4>
+      <p>La moyenne des N derniers cours : elle lisse le bruit. Prix au-dessus de la SMA 50 = tendance plutôt haussière. Le croisement SMA 20 / SMA 50 est un signal classique… mais en marché latéral il produit beaucoup de faux signaux.</p>
+      <h4>RSI (14)</h4>
+      <p>Indicateur entre 0 et 100 mesurant la force récente du mouvement. Au-dessus de 70 : « suracheté » ; sous 30 : « survendu ». Dans une forte tendance, le RSI peut rester longtemps en zone extrême : ce n'est pas un signal de retournement automatique.</p>
+      <div class="note">Aucun indicateur ne fonctionne dans tous les marchés. Teste-les dans le simulateur sur les différents scénarios.</div>`,
+    quiz: [
+      { q: "Une tendance haussière se reconnaît par…", o: ["Des sommets et creux de plus en plus bas", "Des sommets et creux de plus en plus hauts", "Un prix qui oscille sans direction", "Un volume faible"], a: 1, e: "Sommets et creux ascendants = tendance haussière." },
+      { q: "Un RSI à 80 signifie automatiquement qu'il faut vendre.", o: ["Vrai", "Faux : en forte tendance il peut rester élevé longtemps"], a: 1, e: "Le RSI indique une force relative, pas un retournement certain." },
+      { q: "Pourquoi un croisement de moyennes mobiles est-il peu fiable en marché latéral ?", o: ["Les moyennes ne se croisent jamais", "Il génère de nombreux faux signaux", "Les frais sont supprimés", "Il est interdit"], a: 1, e: "Quand le prix oscille sans tendance, les moyennes se croisent souvent sans qu'un mouvement durable s'ensuive." }
+    ]
+  },
+  {
+    id: "fondamentale",
+    title: "6. Analyse fondamentale : valoriser une entreprise",
+    level: "Intermédiaire",
+    html: `
+      <p>L'<strong>analyse fondamentale</strong> cherche à estimer la valeur d'une entreprise à partir de ses résultats, de son secteur et de ses perspectives.</p>
+      <h4>Indicateurs clés</h4>
+      <ul>
+        <li><strong>Chiffre d'affaires</strong> : ses ventes. Croissance ?</li>
+        <li><strong>Résultat net / BPA</strong> : bénéfice (par action).</li>
+        <li><strong>PER</strong> (Price Earnings Ratio) = cours / bénéfice par action. Un PER de 20 : tu paies 20 € pour 1 € de bénéfice annuel. À comparer avec le secteur et la croissance.</li>
+        <li><strong>Dette</strong> : une dette élevée fragilise l'entreprise si les taux montent ou si l'activité ralentit.</li>
+        <li><strong>Rendement du dividende</strong> = dividende / cours.</li>
+      </ul>
+      <h4>Le piège du « pas cher »</h4>
+      <p>Un PER bas peut signaler une aubaine… ou une entreprise en déclin. Un PER élevé peut refléter une forte croissance… ou une bulle. Un seul ratio ne suffit jamais.</p>
+      <div class="note">Les publications de résultats provoquent souvent de gros mouvements (gaps). Surveille le calendrier des résultats des titres que tu détiens.</div>`,
+    quiz: [
+      { q: "Une action cote 60 € et le BPA est de 3 €. Quel est le PER ?", o: ["5", "20", "180", "0,05"], a: 1, e: "PER = 60 / 3 = 20." },
+      { q: "Un PER très bas est toujours une bonne affaire.", o: ["Vrai", "Faux : cela peut refléter une entreprise en difficulté"], a: 1, e: "Le marché peut anticiper un déclin des bénéfices." },
+      { q: "Le rendement du dividende se calcule…", o: ["Dividende / cours", "Cours / dividende", "Bénéfice / chiffre d'affaires", "Dividende x PER"], a: 0, e: "Rendement = dividende annuel par action / cours de l'action." }
+    ]
+  },
+  {
+    id: "risque",
+    title: "7. Gestion du risque (la leçon la plus importante)",
+    level: "Essentiel",
+    html: `
+      <p>Les traders durables ne sont pas ceux qui ont le plus souvent raison, mais ceux qui <strong>contrôlent leurs pertes</strong>.</p>
+      <h4>Règle des 1–2 %</h4>
+      <p>Ne risque jamais plus de 1 à 2 % de ton capital sur un seul trade. Avec 10 000 € et 1 % de risque, tu acceptes de perdre au maximum 100 € si ton stop est touché.</p>
+      <h4>Taille de position</h4>
+      <p><code>Quantité = risque en € / (prix d'entrée − stop)</code></p>
+      <p>Exemple : risque 100 €, entrée 50 €, stop 48 € → 100 / 2 = <strong>50 actions</strong>. Utilise l'onglet <em>Calculateur</em>.</p>
+      <h4>Ratio gain/risque (R/R)</h4>
+      <p>Vise des trades où le gain potentiel est au moins 2 fois le risque. Avec un R/R de 2, tu peux te tromper une fois sur deux et rester gagnant (avant frais).</p>
+      <h4>L'asymétrie des pertes</h4>
+      <p>Perdre 50 % exige un gain de <strong>+100 %</strong> pour revenir à l'équilibre. Les grosses pertes sont presque impossibles à rattraper.</p>
+      <h4>Diversification</h4>
+      <p>Ne mets pas tous tes œufs dans le même panier : plusieurs entreprises, secteurs, ou mieux, un ETF large.</p>`,
+    quiz: [
+      { q: "Capital 10 000 €, risque 1 %, entrée 50 €, stop 48 €. Combien d'actions ?", o: ["20", "50", "100", "200"], a: 1, e: "Risque = 100 €. Risque par action = 2 €. 100 / 2 = 50 actions." },
+      { q: "Après une perte de 50 %, quel gain faut-il pour revenir à l'équilibre ?", o: ["+50 %", "+75 %", "+100 %", "+150 %"], a: 2, e: "100 → 50, puis 50 x 2 = 100. Il faut +100 %." },
+      { q: "Avec un R/R de 3 et un taux de réussite de 40 %, avant frais, la stratégie est…", o: ["Perdante", "Gagnante", "Neutre", "Impossible à dire"], a: 1, e: "Espérance par trade = 0,4 x 3R − 0,6 x 1R = +0,6R : gagnante en théorie." }
+    ]
+  },
+  {
+    id: "psycho",
+    title: "8. Psychologie et pièges classiques",
+    level: "Essentiel",
+    html: `
+      <p>La plupart des erreurs viennent des émotions, pas d'un manque de connaissances.</p>
+      <ul>
+        <li><strong>FOMO</strong> (peur de rater) : acheter après une grosse hausse parce que « tout le monde en parle ».</li>
+        <li><strong>Aversion à la perte</strong> : garder une position perdante en espérant un retour, tout en vendant trop tôt les gagnantes.</li>
+        <li><strong>Surtrading</strong> : multiplier les opérations ; les frais grignotent la performance.</li>
+        <li><strong>Revenge trading</strong> : prendre plus de risque pour « se refaire » après une perte.</li>
+        <li><strong>Excès de confiance</strong> : après quelques gains, augmenter la taille sans raison.</li>
+      </ul>
+      <h4>Les antidotes</h4>
+      <ul>
+        <li>Un <strong>plan écrit</strong> avant d'entrer : entrée, stop, objectif, taille.</li>
+        <li>Un <strong>journal de trading</strong> : note le pourquoi de chaque décision.</li>
+        <li>Des règles de risque fixes que tu ne modifies pas en cours de route.</li>
+      </ul>
+      <div class="note">Méfie-toi de toute promesse de « gains garantis », de signaux payants ou de « conseillers » qui te contactent en privé : ce sont des signaux d'arnaque classiques.</div>`,
+    quiz: [
+      { q: "Que désigne le FOMO ?", o: ["Un indicateur technique", "La peur de rater une opportunité qui pousse à acheter trop tard", "Un type d'ordre", "Un impôt"], a: 1, e: "Fear Of Missing Out : décision émotionnelle, souvent au plus mauvais moment." },
+      { q: "Après une perte, tu doubles ta mise pour te refaire. C'est…", o: ["Du money management", "Du revenge trading, très dangereux", "De la diversification", "Une bonne pratique"], a: 1, e: "Augmenter le risque pour récupérer une perte est une des causes principales de ruine." },
+      { q: "Quel est le meilleur moyen de progresser en continu ?", o: ["Éviter de noter ses erreurs", "Tenir un journal de trading", "Suivre des signaux payants", "Changer de stratégie à chaque perte"], a: 1, e: "Le journal te permet d'analyser objectivement ce qui marche ou non." }
+    ]
+  },
+  {
+    id: "fiscalite",
+    title: "9. Enveloppes et frais (exemple France)",
+    level: "Intermédiaire",
+    html: `
+      <p>Selon ton pays, les règles diffèrent. À titre d'exemple pour la <strong>France</strong> :</p>
+      <ul>
+        <li><strong>PEA</strong> : enveloppe pour actions/ETF européens, avantage fiscal après 5 ans de détention (hors prélèvements sociaux), plafond de versements.</li>
+        <li><strong>Compte-titres ordinaire (CTO)</strong> : sans plafond, accès à tous les marchés, flat tax sur les gains.</li>
+        <li><strong>Assurance-vie</strong> : support long terme avec fonds en euros et unités de compte.</li>
+      </ul>
+      <h4>Les frais qui comptent</h4>
+      <ul>
+        <li>Frais de courtage (par ordre).</li>
+        <li>Frais de gestion annuels des ETF/fonds (TER).</li>
+        <li>Frais de change et spread.</li>
+      </ul>
+      <p>Sur du long terme, quelques dixièmes de pourcent de frais annuels font une grande différence à cause des intérêts composés.</p>
+      <div class="note">Cette leçon est une information générale, pas un conseil fiscal. Vérifie toujours les règles actuelles de ton pays auprès d'une source officielle.</div>`,
+    quiz: [
+      { q: "Pourquoi les frais sont-ils importants même s'ils paraissent faibles ?", o: ["Ils n'ont aucun effet", "Ils s'accumulent et réduisent le rendement sur la durée", "Ils augmentent les gains", "Ils sont remboursés"], a: 1, e: "Les frais sont certains, les gains non. Sur des années, leur effet cumulé est important." },
+      { q: "Un PEA est destiné en priorité à…", o: ["Des actions et ETF éligibles (Europe)", "Des cryptomonnaies", "Des CFD", "Des devises"], a: 0, e: "Le PEA permet d'investir sur des actions/ETF européens éligibles." }
+    ]
+  }
+];
+
+const GLOSSARY = [
+  ["Action", "Titre représentant une part du capital d'une entreprise."],
+  ["Ask", "Meilleur prix auquel un vendeur accepte de vendre."],
+  ["Bid", "Meilleur prix auquel un acheteur accepte d'acheter."],
+  ["Bull market", "Marché haussier : tendance générale à la hausse."],
+  ["Bear market", "Marché baissier : tendance générale à la baisse (souvent −20 % ou plus depuis le sommet)."],
+  ["BPA", "Bénéfice par action : résultat net divisé par le nombre d'actions."],
+  ["Capitalisation boursière", "Cours de l'action x nombre d'actions : valeur de l'entreprise en bourse."],
+  ["CFD", "Contrat sur la différence, produit à effet de levier très risqué pour les débutants."],
+  ["Chandelier", "Représentation d'une période avec ouverture, plus haut, plus bas et clôture."],
+  ["Courtier (broker)", "Intermédiaire qui passe tes ordres en bourse."],
+  ["Diversification", "Répartir ses investissements pour réduire le risque lié à un seul actif."],
+  ["Dividende", "Part des bénéfices versée aux actionnaires."],
+  ["Drawdown", "Baisse entre un sommet et un creux de ton capital ou d'un actif."],
+  ["ETF", "Fonds coté qui réplique un indice ou un panier d'actifs."],
+  ["FOMO", "Fear Of Missing Out : peur de rater une hausse."],
+  ["Gap", "Écart de prix entre la clôture d'une séance et l'ouverture suivante."],
+  ["Indice", "Panier de titres mesurant un marché (CAC 40, S&P 500…)."],
+  ["Levier", "Mécanisme qui multiplie l'exposition (et donc gains et pertes)."],
+  ["Liquidité", "Facilité à acheter/vendre sans faire bouger le prix."],
+  ["Obligation", "Titre de créance : prêt rémunéré à un État ou une entreprise."],
+  ["Ordre au marché", "Ordre exécuté immédiatement au meilleur prix disponible."],
+  ["Ordre limité", "Ordre exécuté seulement au prix fixé ou mieux."],
+  ["PER", "Cours / bénéfice par action. Mesure combien tu paies pour 1 € de bénéfice."],
+  ["Plus-value", "Gain réalisé lors de la revente à un prix supérieur à l'achat."],
+  ["Position", "Quantité d'un titre que tu détiens (ou vends à découvert)."],
+  ["R/R (risque/rendement)", "Rapport entre le gain potentiel et la perte potentielle d'un trade."],
+  ["Résistance", "Niveau de prix où la hausse a tendance à s'arrêter."],
+  ["RSI", "Relative Strength Index : indicateur de momentum entre 0 et 100."],
+  ["SMA", "Simple Moving Average : moyenne mobile simple des N derniers cours."],
+  ["Spread", "Écart entre le prix d'achat et de vente."],
+  ["Stop-loss", "Ordre qui ferme une position si le prix atteint un seuil de perte défini."],
+  ["Support", "Niveau de prix où la baisse a tendance à s'arrêter."],
+  ["Take-profit", "Ordre de vente à un prix cible pour encaisser un gain."],
+  ["Tendance", "Direction générale du prix (haussière, baissière, latérale)."],
+  ["Volatilité", "Ampleur des variations de prix d'un actif."],
+  ["Volume", "Nombre de titres échangés sur une période."]
+];

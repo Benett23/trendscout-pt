@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrendScout – Apprendre la bourse</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">📈 TrendScout <span>Apprendre la bourse</span></div>
+    <nav id="tabs" role="tablist">
+      <button role="tab" data-tab="learn" class="active">Apprendre</button>
+      <button role="tab" data-tab="sim">Simulateur</button>
+      <button role="tab" data-tab="quiz">Quiz</button>
+      <button role="tab" data-tab="risk">Calculateur</button>
+      <button role="tab" data-tab="gloss">Glossaire</button>
+    </nav>
+  </header>
+
+  <main>
+    <p class="disclaimer">Outil pédagogique : données <strong>fictives</strong>, aucun conseil en investissement. Investir comporte un risque de perte en capital.</p>
+
+    <!-- APPRENDRE -->
+    <section id="tab-learn" class="tab active">
+      <div class="progress-line"><div id="learn-bar"></div></div>
+      <p id="learn-progress" class="muted"></p>
+      <div id="lesson-list" class="grid"></div>
+      <article id="lesson-view" class="card hidden"></article>
+    </section>
+
+    <!-- SIMULATEUR -->
+    <section id="tab-sim" class="tab">
+      <div id="sim-setup" class="card">
+        <h2>Simulateur de trading</h2>
+        <p>Tu as <strong>10 000 €</strong> virtuels. Le marché est généré aléatoirement : tu ne sais pas s'il est haussier, baissier ou latéral. Avance jour après jour, analyse le graphique, achète et vends. Frais : 0,1 % par ordre.</p>
+        <label>Scénario
+          <select id="sim-scenario">
+            <option value="mystery">Mystère (recommandé)</option>
+            <option value="bull">Tendance haussière</option>
+            <option value="bear">Tendance baissière</option>
+            <option value="range">Marché latéral</option>
+            <option value="volatile">Marché volatil</option>
+          </select>
+        </label>
+        <button id="sim-start" class="primary">Démarrer une partie</button>
+      </div>
+
+      <div id="sim-game" class="hidden">
+        <div class="stats">
+          <div><span>Jour</span><strong id="st-day">–</strong></div>
+          <div><span>Prix</span><strong id="st-price">–</strong></div>
+          <div><span>Liquidités</span><strong id="st-cash">–</strong></div>
+          <div><span>Position</span><strong id="st-pos">–</strong></div>
+          <div><span>Valeur totale</span><strong id="st-equity">–</strong></div>
+          <div><span>Perf.</span><strong id="st-perf">–</strong></div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-bar">
+            <label><input type="checkbox" id="ind-sma20" checked> SMA 20</label>
+            <label><input type="checkbox" id="ind-sma50" checked> SMA 50</label>
+            <label><input type="checkbox" id="ind-rsi" checked> RSI 14</label>
+            <span id="ohlc" class="muted"></span>
+          </div>
+          <canvas id="chart"></canvas>
+        </div>
+
+        <div class="card order">
+          <div class="row">
+            <label>Quantité <input type="number" id="qty" min="1" step="1" value="10"></label>
+            <button id="btn-max" class="ghost">Max</button>
+            <button id="btn-buy" class="buy">Acheter</button>
+            <button id="btn-sell" class="sell">Vendre</button>
+            <button id="btn-sell-all" class="ghost">Tout vendre</button>
+          </div>
+          <div class="row">
+            <label>Stop-loss (prix) <input type="number" id="stop" step="0.01" placeholder="optionnel"></label>
+            <label>Objectif (prix) <input type="number" id="target" step="0.01" placeholder="optionnel"></label>
+            <button id="btn-levels" class="ghost">Appliquer</button>
+          </div>
+          <div class="row">
+            <button id="btn-next" class="primary">Jour suivant ▶</button>
+            <button id="btn-week" class="ghost">+5 jours ⏩</button>
+            <button id="btn-auto" class="ghost">Auto ▶▶</button>
+            <button id="btn-end" class="ghost">Terminer la partie</button>
+          </div>
+          <p id="sim-msg" class="msg"></p>
+        </div>
+
+        <div class="card">
+          <h3>Journal des opérations</h3>
+          <div id="journal" class="journal"></div>
+        </div>
+      </div>
+
+      <div id="sim-result" class="card hidden"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="tab-quiz" class="tab">
+      <div class="card" id="quiz-box"></div>
+    </section>
+
+    <!-- CALCULATEUR -->
+    <section id="tab-risk" class="tab">
+      <div class="card">
+        <h2>Calculateur de taille de position</h2>
+        <p class="muted">Détermine combien de titres acheter pour ne risquer qu'un pourcentage fixe de ton capital.</p>
+        <div class="form-grid">
+          <label>Capital (€) <input type="number" id="r-cap" value="10000" step="100"></label>
+          <label>Risque par trade (%) <input type="number" id="r-risk" value="1" step="0.1"></label>
+          <label>Prix d'entrée <input type="number" id="r-entry" value="50" step="0.01"></label>
+          <label>Stop-loss <input type="number" id="r-stop" value="48" step="0.01"></label>
+          <label>Objectif (optionnel) <input type="number" id="r-target" value="56" step="0.01"></label>
+        </div>
+        <div id="r-out" class="result-grid"></div>
+        <p id="r-warn" class="msg"></p>
+      </div>
+    </section>
+
+    <!-- GLOSSAIRE -->
+    <section id="tab-gloss" class="tab">
+      <div class="card">
+        <input type="search" id="gloss-q" placeholder="Rechercher un terme…">
+        <dl id="gloss-list"></dl>
+      </div>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
