@@ -22,7 +22,8 @@ function resolveTheme() { const t = store.get("theme", null); return t === "ligh
 function applyTheme() {
   const t = resolveTheme();
   document.documentElement.setAttribute("data-theme", t);
-  $("#meta-theme").setAttribute("content", css("--bg"));
+  const meta = $("#meta-theme");
+  if (meta) meta.setAttribute("content", css("--bg"));
   $$(".theme-btn").forEach(b => {
     b.innerHTML = ic(t === "dark" ? "sun" : "moon") + (t === "dark" ? "Thème clair" : "Thème sombre");
     b.setAttribute("aria-label", t === "dark" ? "Passer au thème clair" : "Passer au thème sombre");
