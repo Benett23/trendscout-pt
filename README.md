@@ -3,9 +3,9 @@
 Application web pédagogique en français, sans dépendance ni étape de build. Elle fonctionne sur **ordinateur et mobile**, peut s'**installer comme une vraie application** et marche **hors ligne** une fois chargée. Design « Verre » (clair et sombre, police Inter embarquée).
 
 ## Contenu
-- **Apprendre** : 9 leçons avec mini-quiz et progression sauvegardée.
+- **Apprendre** : 10 leçons avec mini-quiz et progression sauvegardée.
 - **Simulateur** : 10 000 € virtuels sur un marché fictif. Chandeliers (hausse creuse, baisse pleine), SMA 20/50, RSI 14, ordres, stop-loss et objectif (gaps gérés), frais 0,1 %, repères d'achat/vente, journal, bilan avec courbe de capital et conseils.
-- **Quiz** : 10 questions aléatoires. **Calculateur** : taille de position avec schéma. **Glossaire** : 36 termes.
+- **Quiz** : 10 questions aléatoires. **Calculateur** : taille de position avec schéma. **Glossaire** : 42 termes.
 
 Les données sont **fictives** ; l'outil ne constitue pas un conseil en investissement.
 

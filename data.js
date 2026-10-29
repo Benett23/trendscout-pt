@@ -193,7 +193,8 @@ const LESSONS = [
     html: `
       <p>Selon ton pays, les règles diffèrent. À titre d'exemple pour la <strong>France</strong> :</p>
       <ul>
-        <li><strong>PEA</strong> : enveloppe pour actions/ETF européens, avantage fiscal après 5 ans de détention (hors prélèvements sociaux), plafond de versements.</li>
+        <li><strong>PEA</strong> : enveloppe pour actions et ETF européens, avantage fiscal après 5 ans de détention (hors prélèvements sociaux), plafond de versements (150 000 € pour le PEA classique). Il n'y a en général pas de minimum pour l'ouvrir. Il existe aussi le <strong>PEA-PME</strong> (petites et moyennes entreprises) et le <strong>PEA Jeune</strong> (18 à 25 ans, rattaché au foyer fiscal des parents, plafond plus bas).</li>
+        <li><strong>ETF éligible au PEA</strong> : il doit être investi à au moins 75 % en actions européennes. Un ETF « monde » est donc parfois éligible grâce à un montage particulier : vérifie toujours l'éligibilité dans la fiche du fonds.</li>
         <li><strong>Compte-titres ordinaire (CTO)</strong> : sans plafond, accès à tous les marchés, flat tax sur les gains.</li>
         <li><strong>Assurance-vie</strong> : support long terme avec fonds en euros et unités de compte.</li>
       </ul>
@@ -208,6 +209,35 @@ const LESSONS = [
     quiz: [
       { q: "Pourquoi les frais sont-ils importants même s'ils paraissent faibles ?", o: ["Ils n'ont aucun effet", "Ils s'accumulent et réduisent le rendement sur la durée", "Ils augmentent les gains", "Ils sont remboursés"], a: 1, e: "Les frais sont certains, les gains non. Sur des années, leur effet cumulé est important." },
       { q: "Un PEA est destiné en priorité à…", o: ["Des actions et ETF éligibles (Europe)", "Des cryptomonnaies", "Des CFD", "Des devises"], a: 0, e: "Le PEA permet d'investir sur des actions/ETF européens éligibles." }
+    ]
+  },
+  {
+    id: "etf",
+    title: "10. ETF : comment bien les choisir",
+    level: "Intermédiaire",
+    html: `
+      <p>Un ETF indiciel est un moyen simple de s'exposer à tout un marché. Mais tous les ETF ne se valent pas : voici les critères à vérifier avant d'en acheter un.</p>
+      <h4>1. L'indice suivi (le critère n°1)</h4>
+      <p>L'ETF reproduit un indice. C'est lui qui détermine ce que tu possèdes : le <strong>MSCI World</strong> (grandes entreprises de pays développés), le <strong>S&amp;P 500</strong> (500 grandes entreprises américaines), le <strong>CAC 40</strong> (40 grandes entreprises françaises)… Un indice large donne plus de diversification qu'un indice concentré sur un pays ou un secteur.</p>
+      <h4>2. Les frais</h4>
+      <p>Les frais de gestion annuels (<strong>TER</strong>, ou frais courants) d'un ETF se situent souvent entre 0,05 % et 0,50 % par an, contre environ 1 % à 2,5 % pour un fonds géré activement. Sur 20 ans, cet écart pèse lourd à cause des intérêts composés.</p>
+      <h4>3. La réplication</h4>
+      <p>Réplication <strong>physique</strong> : le fonds achète réellement les titres de l'indice. Réplication <strong>synthétique</strong> : il utilise un contrat (swap) avec une banque pour reproduire la performance. Les deux existent ; vérifie laquelle est utilisée et pourquoi.</p>
+      <h4>4. La taille (l'encours)</h4>
+      <p>Un fonds très petit risque d'être fermé et sera moins liquide. Regarde l'<strong>encours</strong> (les sommes gérées) et le volume d'échange.</p>
+      <h4>5. L'éligibilité à ton enveloppe</h4>
+      <p>Si tu investis via un PEA, l'ETF doit y être éligible. Les ETF à <strong>distribution</strong> versent les dividendes ; ceux à <strong>capitalisation</strong> les réinvestissent automatiquement.</p>
+      <h4>Les limites à connaître</h4>
+      <ul>
+        <li>Un ETF n'élimine pas le risque : si le marché baisse de 30 %, l'ETF baisse aussi.</li>
+        <li>Un ETF « monde » est diversifié, mais pondéré par la taille des entreprises, avec une forte part d'entreprises américaines.</li>
+        <li>Les performances passées ne garantissent rien.</li>
+      </ul>
+      <div class="keep"><span class="k">À retenir</span><p>Compare toujours : indice suivi, frais, méthode de réplication, taille du fonds, éligibilité à ton enveloppe. Les chiffres changent : vérifie-les sur la fiche officielle du fonds (DICI / document d'informations clés).</p></div>`,
+    quiz: [
+      { q: "Quel est le critère le plus important pour choisir un ETF ?", o: ["La couleur du logo de l'émetteur", "L'indice qu'il réplique", "Le nombre de ses publicités", "Son prix unitaire"], a: 1, e: "L'indice détermine ce que tu détiens réellement : c'est le premier critère, avant les frais et la taille." },
+      { q: "Que mesure le TER d'un ETF ?", o: ["Ses frais de gestion annuels", "Son rendement garanti", "Le nombre de titres détenus", "Sa liquidité"], a: 0, e: "Le TER (Total Expense Ratio) correspond aux frais courants annuels, prélevés dans la valeur du fonds." },
+      { q: "Un ETF à capitalisation…", o: ["Verse les dividendes sur ton compte", "Réinvestit automatiquement les dividendes", "Garantit le capital", "N'est jamais éligible au PEA"], a: 1, e: "À capitalisation, les dividendes sont réinvestis dans le fonds ; à distribution, ils te sont versés." }
     ]
   }
 ];
@@ -246,6 +276,12 @@ const GLOSSARY = [
   ["Stop-loss", "Ordre qui ferme une position si le prix atteint un seuil de perte défini."],
   ["Support", "Niveau de prix où la baisse a tendance à s'arrêter."],
   ["Take-profit", "Ordre de vente à un prix cible pour encaisser un gain."],
+  ["Encours", "Montant total des sommes gérées par un fonds ou un ETF."],
+  ["MSCI World", "Indice regroupant de grandes entreprises de pays développés, très utilisé comme référence pour un ETF « monde »."],
+  ["PEA", "Plan d'épargne en actions (France) : enveloppe pour actions et ETF européens avec avantage fiscal après 5 ans."],
+  ["Réplication", "Méthode utilisée par un ETF pour reproduire son indice : physique (achat des titres) ou synthétique (via un swap)."],
+  ["S&P 500", "Indice des 500 grandes entreprises cotées aux États-Unis."],
+  ["TER (frais courants)", "Frais de gestion annuels d'un fonds ou d'un ETF, exprimés en pourcentage de l'encours."],
   ["Tendance", "Direction générale du prix (haussière, baissière, latérale)."],
   ["Volatilité", "Ampleur des variations de prix d'un actif."],
   ["Volume", "Nombre de titres échangés sur une période."]

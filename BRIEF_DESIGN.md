@@ -141,7 +141,7 @@ Parcours recommandé à mettre en avant (suggestion) : **Apprendre → Simulateu
 - Opportunité de design : petit schéma visuel entrée / stop / objectif qui se met à jour.
 
 ### 5.5 Glossaire
-- Champ de recherche (filtre en direct) + liste de 36 termes (terme en évidence, définition en dessous).
+- Champ de recherche (filtre en direct) + liste de 42 termes (terme en évidence, définition en dessous).
 - Opportunité : index alphabétique, ou mise en avant des termes liés à la leçon en cours.
 
 ---
@@ -256,4 +256,4 @@ Contraintes :
 
 ## 14. Contenu intégral de référence
 
-Les textes complets des 9 leçons, des 26 questions de quiz et du glossaire sont dans le fichier `data.js` du dépôt `Benett23/trendscout-pt` (branche `claude/trading-learning-tool`). Le code de l'interface est dans `index.html`, `style.css` et `app.js`. La version publiée en ligne, utilisable comme référence visuelle de l'existant : https://claude.ai/artifact/QUtrkij5rHyKxFbY2Aav3K (privée, visible seulement depuis ton compte).
+Les textes complets des 10 leçons, des 29 questions de quiz et du glossaire sont dans le fichier `data.js` du dépôt `Benett23/trendscout-pt` (branche `claude/trading-learning-tool`). Le code de l'interface est dans `index.html`, `style.css` et `app.js`. La version publiée en ligne, utilisable comme référence visuelle de l'existant : https://claude.ai/artifact/QUtrkij5rHyKxFbY2Aav3K (privée, visible seulement depuis ton compte).
