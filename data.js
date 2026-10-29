@@ -17,7 +17,7 @@ const LESSONS = [
       </ul>
       <h4>Le carnet d'ordres</h4>
       <p>Chaque titre a un carnet d'ordres : à gauche les acheteurs (prix <em>bid</em>), à droite les vendeurs (prix <em>ask</em>). L'écart entre les deux s'appelle le <strong>spread</strong>. Une transaction a lieu quand un acheteur et un vendeur s'accordent sur un prix.</p>
-      <div class="note">À retenir : en bourse, il n'y a pas de gain garanti. Le prix monte parce que plus de gens veulent acheter que vendre, et inversement.</div>`,
+      <div class="keep"><span class="k">À retenir</span><p>À retenir : en bourse, il n'y a pas de gain garanti. Le prix monte parce que plus de gens veulent acheter que vendre, et inversement.</p></div>`,
     quiz: [
       { q: "Qu'est-ce qu'une action ?", o: ["Un prêt fait à une entreprise", "Une part du capital d'une entreprise", "Une assurance contre les pertes", "Un contrat à durée limitée"], a: 1, e: "Une action représente une fraction de propriété de l'entreprise. Un prêt, c'est une obligation." },
       { q: "Qu'est-ce que le spread ?", o: ["L'écart entre le prix d'achat (ask) et de vente (bid)", "Le dividende annuel", "La commission du courtier", "La variation sur une journée"], a: 0, e: "Le spread est la différence entre le meilleur prix vendeur et le meilleur prix acheteur." },
@@ -40,7 +40,7 @@ const LESSONS = [
         <li><strong>CFD, options, turbos, futures</strong> : ils utilisent le <em>levier</em>. Tu peux perdre plus vite que ce que tu imagines.</li>
         <li><strong>Cryptos et micro-capitalisations</strong> : très volatils.</li>
       </ul>
-      <div class="note">Règle simple : pour apprendre, commence par comprendre les actions et les ETF. Le reste viendra plus tard.</div>`,
+      <div class="keep"><span class="k">À retenir</span><p>Règle simple : pour apprendre, commence par comprendre les actions et les ETF. Le reste viendra plus tard.</p></div>`,
     quiz: [
       { q: "Quel est le principal avantage d'un ETF indiciel ?", o: ["Il garantit le capital", "Il diversifie sur de nombreuses entreprises avec peu de frais", "Il rapporte toujours plus qu'une action", "Il est exempt de risque"], a: 1, e: "Un ETF réplique un indice : tu es exposé à beaucoup de sociétés d'un coup, avec des frais faibles. Il reste soumis au risque de marché." },
       { q: "Une obligation, c'est…", o: ["Une part de propriété", "Un prêt rémunéré par des intérêts", "Un type de dividende", "Un ordre de bourse"], a: 1, e: "Tu prêtes à l'émetteur, qui te verse un coupon et te rembourse à l'échéance (sauf défaut)." },
@@ -57,12 +57,12 @@ const LESSONS = [
         <li><strong>Open</strong> (ouverture) et <strong>Close</strong> (clôture) : le « corps » du chandelier.</li>
         <li><strong>High</strong> (plus haut) et <strong>Low</strong> (plus bas) : les « mèches ».</li>
       </ul>
-      <p>Chandelier <span style="color:var(--up)">vert/haussier</span> : clôture &gt; ouverture. Chandelier <span style="color:var(--down)">rouge/baissier</span> : clôture &lt; ouverture.</p>
+      <p>Chandelier <strong class="up">haussier</strong> (vert, <em>creux</em>) : clôture &gt; ouverture. Chandelier <strong class="down">baissier</strong> (rouge, <em>plein</em>) : clôture &lt; ouverture. La forme (creux ou plein) permet de les distinguer même sans les couleurs.</p>
       <h4>Ce que racontent les mèches</h4>
       <p>Une longue mèche haute = les acheteurs ont poussé, mais les vendeurs ont repris la main (rejet du haut). Une longue mèche basse = rebond après une baisse.</p>
       <h4>Les échelles de temps</h4>
       <p>Le graphique journalier donne une vision de moyen terme. Plus l'unité de temps est courte, plus il y a de « bruit » (mouvements aléatoires sans signification). Un débutant a tout intérêt à travailler sur des échelles <strong>journalières ou hebdomadaires</strong>.</p>
-      <div class="note">Dans l'onglet <em>Simulateur</em>, survole le graphique pour voir O/H/L/C de chaque bougie.</div>`,
+      <div class="keep"><span class="k">À essayer</span><p>Dans l'onglet <em>Simulateur</em>, survole le graphique pour voir O/H/L/C de chaque bougie.</p></div>`,
     quiz: [
       { q: "Un chandelier haussier signifie que…", o: ["La clôture est supérieure à l'ouverture", "La clôture est inférieure à l'ouverture", "Le volume est élevé", "Le plus haut égale l'ouverture"], a: 0, e: "Haussier = le prix a fini plus haut qu'il n'a commencé la période." },
       { q: "Que représentent les mèches ?", o: ["Les dividendes", "Les extrêmes (plus haut / plus bas) atteints pendant la période", "Le volume échangé", "Les frais"], a: 1, e: "Les mèches montrent jusqu'où le prix est allé avant de revenir vers le corps." },
@@ -82,7 +82,7 @@ const LESSONS = [
       <p>Se déclenche si le prix touche un seuil défavorable, pour <strong>limiter la perte</strong>. Exemple : tu achètes à 100 €, tu places un stop à 95 € : si le cours tombe à 95 €, tu sors avec ~5 % de perte au lieu de subir une chute plus grande.</p>
       <h4>Objectif (take-profit)</h4>
       <p>Ordre de vente à un prix cible pour sécuriser le gain.</p>
-      <div class="note">Attention aux <em>gaps</em> : si le titre ouvre bien en dessous de ton stop (mauvaise nouvelle pendant la nuit), tu sors au prix d'ouverture, donc plus bas que prévu. Le simulateur reproduit ce cas.</div>`,
+      <div class="keep warn"><span class="k">Attention</span><p>Attention aux <em>gaps</em> : si le titre ouvre bien en dessous de ton stop (mauvaise nouvelle pendant la nuit), tu sors au prix d'ouverture, donc plus bas que prévu. Le simulateur reproduit ce cas.</p></div>`,
     quiz: [
       { q: "Quel ordre te garantit un prix maximum à l'achat ?", o: ["Ordre au marché", "Ordre à cours limité", "Ordre stop", "Aucun"], a: 1, e: "Avec un ordre limité, tu ne paies jamais plus que ton prix, mais il peut ne pas être exécuté." },
       { q: "À quoi sert un stop-loss ?", o: ["À augmenter les gains", "À limiter la perte maximale sur une position", "À éviter les frais", "À acheter moins cher"], a: 1, e: "Le stop sort automatiquement de la position quand le cours atteint un seuil défini." },
@@ -107,7 +107,7 @@ const LESSONS = [
       <p>La moyenne des N derniers cours : elle lisse le bruit. Prix au-dessus de la SMA 50 = tendance plutôt haussière. Le croisement SMA 20 / SMA 50 est un signal classique… mais en marché latéral il produit beaucoup de faux signaux.</p>
       <h4>RSI (14)</h4>
       <p>Indicateur entre 0 et 100 mesurant la force récente du mouvement. Au-dessus de 70 : « suracheté » ; sous 30 : « survendu ». Dans une forte tendance, le RSI peut rester longtemps en zone extrême : ce n'est pas un signal de retournement automatique.</p>
-      <div class="note">Aucun indicateur ne fonctionne dans tous les marchés. Teste-les dans le simulateur sur les différents scénarios.</div>`,
+      <div class="keep"><span class="k">À retenir</span><p>Aucun indicateur ne fonctionne dans tous les marchés. Teste-les dans le simulateur sur les différents scénarios.</p></div>`,
     quiz: [
       { q: "Une tendance haussière se reconnaît par…", o: ["Des sommets et creux de plus en plus bas", "Des sommets et creux de plus en plus hauts", "Un prix qui oscille sans direction", "Un volume faible"], a: 1, e: "Sommets et creux ascendants = tendance haussière." },
       { q: "Un RSI à 80 signifie automatiquement qu'il faut vendre.", o: ["Vrai", "Faux : en forte tendance il peut rester élevé longtemps"], a: 1, e: "Le RSI indique une force relative, pas un retournement certain." },
@@ -130,7 +130,7 @@ const LESSONS = [
       </ul>
       <h4>Le piège du « pas cher »</h4>
       <p>Un PER bas peut signaler une aubaine… ou une entreprise en déclin. Un PER élevé peut refléter une forte croissance… ou une bulle. Un seul ratio ne suffit jamais.</p>
-      <div class="note">Les publications de résultats provoquent souvent de gros mouvements (gaps). Surveille le calendrier des résultats des titres que tu détiens.</div>`,
+      <div class="keep"><span class="k">À surveiller</span><p>Les publications de résultats provoquent souvent de gros mouvements (gaps). Surveille le calendrier des résultats des titres que tu détiens.</p></div>`,
     quiz: [
       { q: "Une action cote 60 € et le BPA est de 3 €. Quel est le PER ?", o: ["5", "20", "180", "0,05"], a: 1, e: "PER = 60 / 3 = 20." },
       { q: "Un PER très bas est toujours une bonne affaire.", o: ["Vrai", "Faux : cela peut refléter une entreprise en difficulté"], a: 1, e: "Le marché peut anticiper un déclin des bénéfices." },
@@ -179,7 +179,7 @@ const LESSONS = [
         <li>Un <strong>journal de trading</strong> : note le pourquoi de chaque décision.</li>
         <li>Des règles de risque fixes que tu ne modifies pas en cours de route.</li>
       </ul>
-      <div class="note">Méfie-toi de toute promesse de « gains garantis », de signaux payants ou de « conseillers » qui te contactent en privé : ce sont des signaux d'arnaque classiques.</div>`,
+      <div class="keep warn"><span class="k">Attention</span><p>Méfie-toi de toute promesse de « gains garantis », de signaux payants ou de « conseillers » qui te contactent en privé : ce sont des signaux d'arnaque classiques.</p></div>`,
     quiz: [
       { q: "Que désigne le FOMO ?", o: ["Un indicateur technique", "La peur de rater une opportunité qui pousse à acheter trop tard", "Un type d'ordre", "Un impôt"], a: 1, e: "Fear Of Missing Out : décision émotionnelle, souvent au plus mauvais moment." },
       { q: "Après une perte, tu doubles ta mise pour te refaire. C'est…", o: ["Du money management", "Du revenge trading, très dangereux", "De la diversification", "Une bonne pratique"], a: 1, e: "Augmenter le risque pour récupérer une perte est une des causes principales de ruine." },
@@ -204,7 +204,7 @@ const LESSONS = [
         <li>Frais de change et spread.</li>
       </ul>
       <p>Sur du long terme, quelques dixièmes de pourcent de frais annuels font une grande différence à cause des intérêts composés.</p>
-      <div class="note">Cette leçon est une information générale, pas un conseil fiscal. Vérifie toujours les règles actuelles de ton pays auprès d'une source officielle.</div>`,
+      <div class="keep warn"><span class="k">Bon à savoir</span><p>Cette leçon est une information générale, pas un conseil fiscal. Vérifie toujours les règles actuelles de ton pays auprès d'une source officielle.</p></div>`,
     quiz: [
       { q: "Pourquoi les frais sont-ils importants même s'ils paraissent faibles ?", o: ["Ils n'ont aucun effet", "Ils s'accumulent et réduisent le rendement sur la durée", "Ils augmentent les gains", "Ils sont remboursés"], a: 1, e: "Les frais sont certains, les gains non. Sur des années, leur effet cumulé est important." },
       { q: "Un PEA est destiné en priorité à…", o: ["Des actions et ETF éligibles (Europe)", "Des cryptomonnaies", "Des CFD", "Des devises"], a: 0, e: "Le PEA permet d'investir sur des actions/ETF européens éligibles." }
