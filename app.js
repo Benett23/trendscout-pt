@@ -535,7 +535,19 @@ $("#btn-levels").onclick = onLevels;
 $("#btn-next").onclick = () => { stopAuto(); nextDay(); };
 $("#btn-week").onclick = () => { stopAuto(); advance(5); };
 $("#btn-auto").onclick = toggleAuto;
-$("#btn-end").onclick = () => { if (sim && !sim.done && confirm("Terminer la partie maintenant ? La position ouverte sera clôturée.")) finish(); };
+// confirmation intégrée à la page (confirm() est bloqué dans les pages publiées)
+let endArmed = null;
+$("#btn-end").onclick = () => {
+  if (!sim || sim.done) return;
+  const b = $("#btn-end");
+  if (!endArmed) {
+    b.textContent = "Confirmer la fin ?";
+    endArmed = setTimeout(() => { endArmed = null; b.textContent = "Terminer la partie"; }, 4000);
+    return;
+  }
+  clearTimeout(endArmed); endArmed = null; b.textContent = "Terminer la partie";
+  finish();
+};
 ["#ind-sma20", "#ind-sma50", "#ind-rsi"].forEach(s => $(s).addEventListener("change", drawChart));
 $("#chart").addEventListener("mousemove", onHover);
 $("#chart").addEventListener("mouseleave", () => { if (sim) { sim.hover = null; $("#ohlc").textContent = ""; drawChart(); } });

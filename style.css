@@ -9,6 +9,7 @@
   --down: #ef5350;
   --warn: #f5a623;
   --border: #2a3452;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
