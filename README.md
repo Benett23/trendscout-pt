@@ -7,12 +7,12 @@ Application web pédagogique en français, sans dépendance ni étape de build. 
 - `app.html` : l'**application** (c'est elle que l'on installe sur l'écran d'accueil).
 
 ## Contenu
-- **Parcours** : 4 niveaux (Les bases · Passer des ordres sans se ruiner · Analyser un marché · Investir sur la durée), 10 leçons et un examen de 6 questions à la fin de chaque niveau. Verrouillage souple : l'étape suivante se débloque quand la précédente est validée, avec un bouton « Je connais déjà ». Validation à environ deux tiers de bonnes réponses.
+- **Parcours** : 4 niveaux (Les bases · Passer des ordres sans se ruiner · Analyser un marché · Investir sur la durée), 15 leçons et un examen de 6 questions à la fin de chaque niveau. Verrouillage souple : l'étape suivante se débloque quand la précédente est validée, avec un bouton « Je connais déjà ». Validation à environ deux tiers de bonnes réponses.
 - **Quiz en direct** : chaque question s'affiche seule, la bonne réponse et l'explication apparaissent dès que tu réponds.
-- **Aventure** : 6 scènes de dialogue avec Malik (le mentor), Fomo, Le Conseiller, Revanche et Patience, liées aux leçons (diversification, FOMO, arnaques, revenge trading, indicateurs, frais). Profil avec rang, XP, série de jours et 15 badges. On récompense la méthode, jamais les gains.
+- **Aventure** : 7 scènes de dialogue avec Malik (le mentor), Fomo, Le Conseiller, Revanche et Patience, liées aux leçons (diversification, FOMO, arnaques, revenge trading, indicateurs, frais). Profil avec rang, XP, série de jours et 16 badges. On récompense la méthode, jamais les gains.
 - **Pratique** : simulateur avec 10 000 € virtuels sur un marché fictif. Chandeliers (hausse creuse, baisse pleine), SMA 20/50, RSI 14, ordres, stop-loss et objectif (gaps gérés), frais 0,1 %, repères d'achat/vente, journal, bilan avec courbe de capital et conseils, et Malik qui commente la partie (stop-loss, risque).
 - **Révisions** : quiz au hasard sur ce qui a été étudié, et reprise des questions ratées.
-- **Outils** : calculateur de taille de position avec schéma, glossaire de 42 termes.
+- **Outils** : calculateur de taille de position avec schéma, **calculateur d'intérêts composés** (versements, frais, comparaison avec les intérêts simples), glossaire de 70 termes, et **Ressources** (feuille de route en 5 étapes et sites officiels et pédagogiques, indépendants de TrendScout).
 
 **Site en ligne** : https://benett23.github.io/trendscout-pt/
 

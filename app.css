@@ -196,6 +196,34 @@ button.opt { width: 100%; text-align: left; font: inherit; color: var(--text); }
 .v .g-choice:disabled { cursor: default; }
 .scene-sum { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
+/* Tableaux dans les leçons */
+.table-wrap { overflow-x: auto; margin: 6px 0; border-radius: 14px; background: var(--fill); }
+.prose table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 520px; }
+.prose th, .prose td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--hairline); }
+.prose th { font-size: 13px; font-weight: 600; color: var(--muted); }
+.prose tbody tr:last-child td { border-bottom: 0; }
+.prose td:first-child { font-weight: 600; }
+.prose sup { font-size: .75em; }
+
+/* Intérêts composés */
+.chart-c { padding: 14px 16px 12px; }
+.chart-c svg { width: 100%; height: auto; display: block; }
+.legend-c { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+.legend-c .sw { display: inline-block; width: 18px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* Ressources et feuille de route */
+.roadmap { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-width: 820px; }
+.rm-item { display: flex; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--glass-thick); border: 1px solid var(--glass-edge); }
+.rm-n { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; flex: none; }
+.rm-txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.rm-txt p { font-size: 15px; }
+#res-list { display: flex; flex-direction: column; gap: 22px; margin-top: 8px; }
+.res-group { display: flex; flex-direction: column; gap: 12px; }
+.res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.res-card { padding: 16px 18px; border-radius: 18px; background: var(--glass-thick); border: 1px solid var(--glass-edge); display: flex; flex-direction: column; gap: 6px; }
+.res-what { font-size: 14.5px; color: var(--muted); line-height: 1.5; }
+.res-link { margin-top: auto; padding-top: 6px; }
+
 /* Simulateur */
 .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; padding: 18px 22px; }
 .chart-card { padding: 14px 16px 12px; }

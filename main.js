@@ -3,5 +3,6 @@
 syncMobileRoot();
 renderGlossary();
 calcRisk();
+calcCompound();
 applyTheme();
 route();

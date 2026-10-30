@@ -32,7 +32,8 @@ const BADGES = [
   { id: "sc-garanti", title: "Zéro rumeur", hint: "Scène « Gains garantis » sans erreur", icon: "shield" },
   { id: "sc-revanche", title: "Pas de revanche", hint: "Scène « Je veux me refaire » sans erreur", icon: "shield" },
   { id: "sc-signal", title: "Esprit critique", hint: "Scène « Le signal parfait » sans erreur", icon: "star" },
-  { id: "sc-frais", title: "Œil sur les frais", hint: "Scène « Les frais invisibles » sans erreur", icon: "star" }
+  { id: "sc-frais", title: "Œil sur les frais", hint: "Scène « Les frais invisibles » sans erreur", icon: "star" },
+  { id: "sc-influenceur", title: "Registre en main", hint: "Scène « Un influenceur très sûr de lui » sans erreur", icon: "shield" }
 ];
 
 // Chaque scène suit une leçon (requires). Étapes : « line » (réplique) ou « choice » (décision).
@@ -97,6 +98,26 @@ const SCENES = [
       ] }
     ],
     takeaway: "Gains garantis, urgence, pression, paiement inhabituel : ce sont les signaux classiques d'une arnaque."
+  },
+  {
+    id: "influenceur", level: 1, requires: "arnaques", xp: 30, cast: ["fomo", "conseiller", "malik"],
+    title: "Un influenceur très sûr de lui",
+    context: "Fomo a vu une vidéo qui promet des gains « sans risque » avec un produit à levier.",
+    steps: [
+      { t: "line", who: "fomo", expr: "excite", text: "Regarde cette vidéo : un influenceur dit qu'avec son produit à levier on fait +10 % par semaine, sans risque. Il y a un lien pour s'inscrire !" },
+      { t: "choice", prompt: "Que lui conseilles-tu ?", options: [
+        { text: "Vérifie que la plateforme figure sur REGAFI ou ORIAS avant tout.", q: "good", reply: [{ who: "malik", expr: "content", text: "Exactement : on vérifie l'agrément sur les registres officiels avant de transférer le moindre euro." }] },
+        { text: "Clique vite, le lien expire ce soir.", q: "bad", reply: [{ who: "malik", expr: "inquiet", text: "L'urgence est un classique de l'arnaque. Une vraie opportunité n'expire pas dans l'heure." }] },
+        { text: "Demande à l'influenceur s'il est sérieux.", q: "bad", reply: [{ who: "malik", expr: "reflechi", text: "Sa réponse ne prouve rien : il a intérêt à te convaincre. Vérifie auprès de sources officielles." }] }
+      ] },
+      { t: "line", who: "conseiller", expr: "clin-d-oeil", text: "Inscris-toi, dépose 250 € et on s'occupe de tout. Pas besoin de comprendre, tu verras vite les résultats." },
+      { t: "choice", prompt: "La plateforme est introuvable dans les registres officiels. Tu…", options: [
+        { text: "N'envoie rien et signale le site (AMF, Épargne Info Service).", q: "good", reply: [{ who: "malik", expr: "fier", text: "Bon réflexe. Pas sur une liste blanche : on ne dépose rien. En signalant, tu protèges aussi les autres." }] },
+        { text: "Dépose un petit montant pour tester.", q: "bad", reply: [{ who: "malik", expr: "inquiet", text: "Même 250 €, c'est perdu si c'est frauduleux. Et ça ouvre la porte à des demandes plus grosses." }] },
+        { text: "Vérifie qu'il n'est pas sur une liste noire : si non, c'est bon.", q: "bad", reply: [{ who: "malik", expr: "reflechi", text: "Ne pas figurer sur une liste noire ne prouve rien : de nouveaux sites apparaissent chaque jour. C'est la présence sur une liste blanche qui compte." }] }
+      ] }
+    ],
+    takeaway: "Pas dans les registres officiels : tu ne déposes rien. Une liste blanche est nécessaire, l'absence de liste noire ne prouve rien."
   },
   {
     id: "revanche", level: 1, requires: "risque", xp: 30, cast: ["revanche", "malik"],

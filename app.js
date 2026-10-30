@@ -35,11 +35,14 @@ mq.addEventListener("change", () => { if (!store.get("theme", null)) applyTheme(
 
 /* ---------- Navigation ---------- */
 const TABS = ["home", "adventure", "learn", "sim", "review", "tools"];
-const ALIAS = { quiz: "review", risk: "tools", gloss: "tools" };
+const ALIAS = { quiz: "review", risk: "tools", compound: "tools", gloss: "tools", resources: "tools" };
+const TOOL_OF = { risk: "calc", compound: "compound", gloss: "gloss", resources: "res" };   // adresse -> outil
+const HASH_OF = { calc: "risk", compound: "compound", gloss: "gloss", res: "resources" };   // outil -> adresse
+const TOOL_TITLE = { risk: "Calculateur", compound: "Intérêts composés", gloss: "Glossaire", resources: "Ressources" };
 let reviewBusy = false;
 function route() {
   const h = location.hash.slice(1) || "home";
-  if (h === "risk" || h === "gloss") setTool(h === "risk" ? "calc" : "gloss");
+  if (TOOL_OF[h]) setTool(TOOL_OF[h]);
   let t = ALIAS[h] || h;
   if (!TABS.includes(t)) t = "home";
   const cur = h === "review" ? "quiz" : h;   // nom affiché dans l'adresse
@@ -50,7 +53,7 @@ function route() {
     a.classList.toggle("is-active", on);
     if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
-  document.title = (h === "risk" ? "Calculateur" : h === "gloss" ? "Glossaire" : $("#tab-" + t).dataset.title) + " – TrendScout";
+  document.title = (TOOL_TITLE[h] || $("#tab-" + t).dataset.title) + " – TrendScout";
   window.scrollTo(0, 0);
   clearTimeout(toastTimer); $$(".toast", $("#toast-zone")).forEach(x => x.remove());
   if (t === "home") renderHome();
@@ -64,10 +67,12 @@ window.addEventListener("hashchange", route);
 
 function setTool(k) {
   $$("[data-tool]").forEach(b => { const on = b.dataset.tool === k; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); });
-  $("#tool-calc").classList.toggle("hidden", k !== "calc");
-  $("#tool-gloss").classList.toggle("hidden", k !== "gloss");
+  ["calc", "compound", "gloss", "res"].forEach(n => $("#tool-" + n).classList.toggle("hidden", n !== k));
+  if (k === "res") renderResources();
+  if (k === "compound") calcCompound();
 }
-$$("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.dataset.tool)));
+// Sur mobile, la bascule change aussi l'adresse (pour que la page affichée corresponde au lien).
+$$("[data-tool]").forEach(b => b.addEventListener("click", () => { location.hash = HASH_OF[b.dataset.tool]; }));
 
 // Petits repères dans la navigation : leçons validées et partie en cours.
 function updateNavBadges() {
@@ -390,6 +395,92 @@ function startReview(qs, kind) {
     addBtn(acts, "btn btn-primary", "Rejouer", () => { reviewBusy = false; renderReview(); });
     host.appendChild(res);
     res.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  });
+}
+
+
+/* ---------- Intérêts composés ---------- */
+const eur0 = n => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+// Simule mois par mois : versements en fin de mois, taux annuel net converti en taux mensuel équivalent.
+function simulateCompound(v0, pmt, netRate, years) {
+  const m = Math.pow(1 + netRate, 1 / 12) - 1, pts = [{ y: 0, v: v0, c: v0, s: v0 }];
+  let bal = v0, paid = v0;
+  for (let k = 1; k <= years * 12; k++) {
+    bal = bal * (1 + m) + pmt; paid += pmt;
+    if (k % 12 === 0) {
+      // intérêts simples : seul le capital et chaque versement rapportent, sans réinvestissement
+      const simple = v0 * (1 + netRate * k / 12) + pmt * (k + netRate * k * (k - 1) / 24);
+      pts.push({ y: k / 12, v: bal, c: paid, s: simple });
+    }
+  }
+  return pts;
+}
+
+function compoundChart(pts) {
+  const W = 360, H = 190, L = 8, R = 8, T = 10, B = 24, maxV = Math.max(...pts.map(p => Math.max(p.v, p.s, p.c))) || 1;
+  const x = y => L + (W - L - R) * y / pts[pts.length - 1].y, yy = v => T + (H - T - B) * (1 - v / maxV);
+  const path = key => pts.map((p, i) => (i ? "L" : "M") + x(p.y).toFixed(1) + " " + yy(p[key]).toFixed(1)).join(" ");
+  const area = "M" + pts.map(p => x(p.y).toFixed(1) + " " + yy(p.v).toFixed(1)).join(" L") + " L" + pts.map(p => x(p.y).toFixed(1) + " " + yy(p.c).toFixed(1)).reverse().join(" L") + " Z";
+  const last = pts[pts.length - 1];
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbes sur ${last.y} ans : total versé ${eur0(last.c)}, intérêts simples ${eur0(last.s)}, intérêts composés ${eur0(last.v)}">
+    <path d="${area}" style="fill:var(--accent);opacity:.12"/>
+    <line x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}" style="stroke:var(--c-grid);stroke-width:1"/>
+    <path d="${path("c")}" style="fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4"/>
+    <path d="${path("s")}" style="fill:none;stroke:var(--c-sma20);stroke-width:2.2"/>
+    <path d="${path("v")}" style="fill:none;stroke:var(--accent);stroke-width:2.6"/>
+    <text x="${L}" y="${H - 6}" style="fill:var(--muted);font-size:11px">0</text>
+    <text x="${W - R}" y="${H - 6}" text-anchor="end" style="fill:var(--muted);font-size:11px">${last.y} ans</text>
+    <text x="${W - R}" y="${T + 11}" text-anchor="end" style="fill:var(--accent);font-size:12px;font-weight:700">${eur0(last.v)}</text></svg>`;
+}
+
+function calcCompound() {
+  const v0 = +$("#c-init").value, pmt = +$("#c-pmt").value, rate = +$("#c-rate").value / 100, fees = +$("#c-fees").value / 100, years = Math.floor(+$("#c-years").value);
+  const out = $("#c-out"), warn = $("#c-warn");
+  const bad = !(v0 >= 0 && pmt >= 0 && fees >= 0 && rate > -0.5 && rate < 0.5 && years >= 1 && years <= 60) || (v0 === 0 && pmt === 0);
+  warn.classList.toggle("hidden", !bad);
+  if (bad) {
+    $("p", warn).textContent = "Renseigne des montants positifs, un taux entre −50 % et 50 %, et une durée de 1 à 60 ans.";
+    out.innerHTML = ""; $("#c-chart").innerHTML = ""; return;
+  }
+  const net = rate - fees;
+  const pts = simulateCompound(v0, pmt, net, years), last = pts[pts.length - 1];
+  const noFees = simulateCompound(v0, pmt, rate, years)[years].v;
+  const cell = (k, v, c = "") => `<div class="stat ${c}"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  out.innerHTML =
+    cell("Total versé", eur0(last.c)) +
+    cell("Valeur avec intérêts composés", eur0(last.v)) +
+    cell("Intérêts gagnés", eur0(last.v - last.c), last.v >= last.c ? "is-up" : "is-down") +
+    cell("Valeur avec intérêts simples", eur0(last.s)) +
+    cell("Écart dû à la composition", eur0(last.v - last.s)) +
+    cell("Ce que les frais ont coûté", eur0(noFees - last.v), fees > 0 ? "is-down" : "");
+  $("#c-chart").innerHTML = compoundChart(pts);
+}
+$$("#tool-compound input").forEach(i => i.addEventListener("input", calcCompound));
+
+/* ---------- Ressources et feuille de route ---------- */
+function renderResources() {
+  const rm = $("#roadmap");
+  if (rm.childElementCount) return;   // déjà affiché
+  ROADMAP.forEach(r => {
+    const li = el("li", "rm-item", `<span class="rm-n"></span><div class="rm-txt"><strong></strong><p></p><span class="caption"></span></div>`);
+    $(".rm-n", li).textContent = r.n; $("strong", li).textContent = r.title; $("p", li).textContent = r.txt; $(".caption", li).textContent = "Dans TrendScout : " + r.where;
+    rm.appendChild(li);
+  });
+  const box = $("#res-list");
+  RESOURCES.forEach(g => {
+    const sec = el("section", "res-group", `<h3 class="title-m"></h3><div class="res-grid"></div>`);
+    $("h3", sec).textContent = g.group;
+    g.items.forEach(it => {
+      const card = el("article", "res-card", `<strong class="res-t"></strong><span class="caption res-org"></span><p class="res-what"></p>`);
+      $(".res-t", card).textContent = it.title; $(".res-org", card).textContent = it.org; $(".res-what", card).textContent = it.what;
+      if (it.url) {
+        const a = el("a", "link res-link"); a.href = it.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+        a.textContent = `Ouvrir ${it.site} ↗`; a.setAttribute("aria-label", `Ouvrir ${it.site} (nouvel onglet)`);
+        card.appendChild(a);
+      }
+      $(".res-grid", sec).appendChild(card);
+    });
+    box.appendChild(sec);
   });
 }
 
