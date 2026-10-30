@@ -23,6 +23,11 @@ Sans VS Code : `python3 -m http.server 8080` dans le dossier, puis `http://local
 
 Pour y accéder depuis un téléphone, l'application doit être servie en HTTPS (hébergement statique gratuit : GitHub Pages, Netlify, Vercel…).
 
+## Publier sur GitHub Pages
+Le workflow `.github/workflows/pages.yml` publie l'application à chaque envoi sur la branche principale (seuls les fichiers de l'application sont publiés).
+
+Activation (une seule fois) : dépôt → **Settings → Pages → Build and deployment → Source : GitHub Actions**. Le site est ensuite disponible sur `https://<ton-compte>.github.io/trendscout-pt/`. Le suivi du déploiement est dans l'onglet **Actions**.
+
 ## Structure
 | Fichier | Rôle |
 |---|---|
