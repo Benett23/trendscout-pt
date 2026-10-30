@@ -19,6 +19,7 @@
     })();
   </script>
   <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="jeu-tokens.css">
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -43,6 +44,11 @@
       <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
       <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 21a6 6 0 0 0 6-6c0-3-2-4.5-3-7-1 1-1.5 2-1.5 3.5C12.5 9 12 6 12 3c-3 3-6 6-6 12a6 6 0 0 0 6 6z"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+      <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
       <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
     </defs>
   </svg>
@@ -56,6 +62,7 @@
         <div class="brand"><span class="logo" aria-hidden="true"></span><span class="title-m">TrendScout</span></div>
         <nav class="side-nav" aria-label="Navigation principale">
           <a class="nav-link is-active" data-tab="learn" href="#learn"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-book"/></svg>Parcours</a>
+          <a class="nav-link" data-tab="adventure" href="#adventure"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-map"/></svg>Aventure</a>
           <a class="nav-link" data-tab="sim" href="#sim"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-chart"/></svg>Pratique</a>
           <a class="nav-link" data-tab="review" href="#review"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-quiz"/></svg>Révisions</a>
           <a class="nav-link" data-tab="tools" href="#tools"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-calc"/></svg>Outils</a>
@@ -82,6 +89,8 @@
             <div class="hero">
               <h1 class="title-xl">Ton parcours</h1>
               <p class="lead muted">4 niveaux, des leçons courtes et un examen à la fin de chaque niveau. On te montre toujours la prochaine étape : tu n'as rien à choisir.</p>
+              <div id="coach-hero"></div>
+              <div id="strip"></div>
               <div class="hero-cta">
                 <button class="btn btn-primary" id="learn-next" type="button"></button>
               </div>
@@ -93,6 +102,12 @@
             <div id="modules" class="modules"></div>
           </div>
           <article id="step-view" class="glass-thick lesson hidden"></article>
+        </section>
+
+        <!-- AVENTURE -->
+        <section id="tab-adventure" class="tab" data-title="Aventure">
+          <div id="adv-home"></div>
+          <article id="adv-scene" class="glass-thick lesson hidden"></article>
         </section>
 
         <!-- SIMULATEUR -->
@@ -142,6 +157,8 @@
               <button id="btn-week" class="btn btn-plain" type="button">+5 jours</button>
               <button id="btn-auto" class="btn btn-plain" type="button">Auto</button>
             </div>
+
+            <div id="sim-coach"></div>
 
             <div class="glass order">
               <div class="row">
@@ -223,15 +240,20 @@
     <!-- Barre d'onglets (mobile) -->
     <nav class="tabbar glass shadow" aria-label="Navigation principale">
       <a data-tab="learn" class="is-active" href="#learn"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-book"/></svg>Parcours</a>
+      <a data-tab="adventure" href="#adventure"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-map"/></svg>Aventure</a>
       <a data-tab="sim" href="#sim"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-chart"/></svg>Pratique</a>
       <a data-tab="review" href="#review"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-quiz"/></svg>Révisions</a>
       <a data-tab="tools" href="#tools"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-calc"/></svg>Outils</a>
     </nav>
 
+    <div id="reward-zone" aria-live="polite"></div>
     <div id="toast-zone" aria-live="polite" aria-atomic="true"></div>
   </div>
 
   <script src="data.js"></script>
+  <script src="jeu-data.js"></script>
   <script src="app.js"></script>
+  <script src="jeu.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

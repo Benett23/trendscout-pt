@@ -27,8 +27,8 @@ jobs:
       - name: Prépare le site
         run: |
           mkdir _site
-          cp index.html app.js app.css data.js tokens.css sw.js manifest.webmanifest _site/
-          cp -r fonts icons _site/
+          cp index.html app.js app.css data.js jeu.js jeu-data.js main.js tokens.css jeu-tokens.css sw.js manifest.webmanifest _site/
+          cp -r fonts icons assets _site/
           touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5

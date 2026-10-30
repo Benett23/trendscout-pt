@@ -34,7 +34,7 @@ $$(".theme-btn").forEach(b => b.addEventListener("click", () => { store.set("the
 mq.addEventListener("change", () => { if (!store.get("theme", null)) applyTheme(); });
 
 /* ---------- Navigation ---------- */
-const TABS = ["learn", "sim", "review", "tools"];
+const TABS = ["learn", "adventure", "sim", "review", "tools"];
 const ALIAS = { quiz: "review", risk: "tools", gloss: "tools" };
 let reviewBusy = false;
 function route() {
@@ -53,6 +53,7 @@ function route() {
   clearTimeout(toastTimer); $("#toast-zone").innerHTML = "";
   if (t === "learn" && $("#step-view").classList.contains("hidden")) renderPath();
   if (t === "review" && !reviewBusy) renderReview();
+  if (t === "adventure" && $("#adv-scene").classList.contains("hidden")) renderAdventure();
   if (t === "sim") { drawChart(); drawEquity(); }
 }
 window.addEventListener("hashchange", route);
@@ -68,7 +69,7 @@ $$("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.datas
 let toastTimer = null;
 function toast(text, kind = "info") {
   const z = $("#toast-zone");
-  z.innerHTML = "";
+  $$(".toast", z).forEach(x => x.remove());   // les récompenses du jeu restent affichées
   const t = el("div", "toast " + kind);
   t.innerHTML = `<span class="ic">${ic(kind === "ok" ? "check" : kind === "err" ? "x" : kind === "warn" ? "warn" : "info", 16, "ico")}</span><span></span>`;
   t.lastChild.textContent = text;
@@ -123,10 +124,15 @@ function runQuiz(host, questions, onFinish) {
       });
       if (ok) score++; else missed.push(q);
       noteResult(q.id, ok);
-      fb.className = "qz-fb " + (ok ? "keep" : "keep warn");
-      fb.innerHTML = `<span class="k">${ok ? "Bien joué" : "Pas tout à fait"}</span><p></p>`;
-      $("p", fb).textContent = (ok ? "" : `La bonne réponse : ${q.o[q.a]}. `) + q.e;
-      const nb = addBtn(fb, "btn btn-primary", i < qs.length - 1 ? "Question suivante →" : "Voir mon résultat", () => { i++; if (i < qs.length) show(); else finish(); });
+      const gained = ok ? Game.awardQuestion(q.id) : (Game.touchDay(), 0);
+      fb.className = "qz-fb";
+      fb.innerHTML = "";
+      const row = Game.line("malik", ok ? "content" : "encourageant", (ok ? "" : `La bonne réponse : ${q.o[q.a]}. `) + q.e, { label: ok ? "Bien joué" : "Pas tout à fait" });
+      const foot = el("div", "bub-foot");
+      if (gained) foot.appendChild(el("span", "g-xp-pill", `+${gained} XP`));
+      const nb = addBtn(foot, "btn btn-primary", i < qs.length - 1 ? "Question suivante →" : "Voir mon résultat", () => { i++; if (i < qs.length) show(); else finish(); });
+      $(".g-bubble", row).appendChild(foot);
+      fb.appendChild(row);
       nb.focus({ preventScroll: true });
       fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
@@ -191,6 +197,9 @@ function renderPath() {
   $("#learn-barwrap").setAttribute("aria-valuenow", p);
   $("#learn-progress").textContent = `${done} / ${total} étapes terminées`;
   const nx = STEPS.find(s => !stepDone(s));
+  const g = Game.greeting(nx && stepTitle(nx), done);
+  $("#coach-hero").replaceChildren(Game.line("malik", g.expr, g.text));
+  $("#strip").innerHTML = Game.strip();
   const btn = $("#learn-next");
   if (nx) { btn.textContent = (done ? "Continuer : " : "Commencer : ") + stepTitle(nx); btn.onclick = () => openStep(nx); }
   else { btn.textContent = "Parcours terminé : revoir la première leçon"; btn.onclick = () => openStep(STEPS[0]); }
@@ -263,25 +272,31 @@ function openStep(s) {
 
 function finishStep(s, score, total, host) {
   const ok = passes(score, total), isLesson = s.kind === "lesson";
+  let gain = 0;
   if (ok) {
     const key = isLesson ? "lessons" : "exams", o = store.get(key, {}), prev = o[s.id];
     if (!prev || score > prev.score) o[s.id] = { score, total };
     store.set(key, o);
-  }
+    if (!prev) gain = Game.stepValidated(isLesson);
+    else Game.checkBadges();
+  } else Game.touchDay();
   const next = STEPS[STEPS.indexOf(s) + 1];
-  const res = el("div", ok ? "keep" : "keep warn");
+  const text = ok
+    ? `${score} / ${total} bonnes réponses. ${isLesson ? "Tu peux passer à la suite." : "Bravo, tu as terminé ce niveau."}`
+    : `${score} / ${total}. Il faut au moins ${needed(total)} bonnes réponses. ${isLesson ? "Relis la leçon puis réessaie." : "Relis les leçons de ce niveau puis réessaie."}`;
+  const label = ok ? (isLesson ? "Leçon validée" : "Niveau " + (s.mi + 1) + " validé") : "Pas encore";
+  const res = Game.line("malik", ok ? (score === total ? "fier" : "content") : "encourageant", text, { label });
   res.setAttribute("role", "status");
+  const foot = el("div", "bub-foot");
+  if (gain) foot.appendChild(el("span", "g-xp-pill", `+${gain} XP`));
   if (ok) {
-    res.innerHTML = `<span class="k">${isLesson ? "Leçon validée" : "Niveau " + (s.mi + 1) + " validé"}</span><p>${score} / ${total} bonnes réponses. ${isLesson ? "Tu peux passer à la suite." : "Bravo, tu as terminé ce niveau."}</p><div class="actions"></div>`;
-    const acts = $(".actions", res);
-    if (next) addBtn(acts, "btn btn-primary", `Suite : ${stepTitle(next)} →`, () => openStep(next));
-    addBtn(acts, next ? "btn btn-plain" : "btn btn-primary", "Retour au parcours", closeStep);
+    if (next) addBtn(foot, "btn btn-primary", `Suite : ${stepTitle(next)} →`, () => openStep(next));
+    addBtn(foot, next ? "btn btn-plain" : "btn btn-primary", "Retour au parcours", closeStep);
   } else {
-    res.innerHTML = `<span class="k">Pas encore</span><p>${score} / ${total}. Il faut au moins ${needed(total)} bonnes réponses. ${isLesson ? "Relis la leçon puis réessaie." : "Relis les leçons de ce niveau puis réessaie."}</p><div class="actions"></div>`;
-    const acts = $(".actions", res);
-    addBtn(acts, "btn btn-primary", "Réessayer", () => openStep(s));
-    addBtn(acts, "btn btn-plain", "Retour au parcours", closeStep);
+    addBtn(foot, "btn btn-primary", "Réessayer", () => openStep(s));
+    addBtn(foot, "btn btn-plain", "Retour au parcours", closeStep);
   }
+  $(".g-bubble", res).appendChild(foot);
   host.appendChild(res);
   res.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
@@ -477,7 +492,7 @@ function startSim() {
   $("#sim-result").classList.add("hidden");
   $("#sim-game").classList.remove("hidden");
   $("#journal").innerHTML = "";
-  $("#stop").value = ""; $("#target").value = "";
+  $("#stop").value = ""; $("#target").value = ""; coachKey = "";
   addLog("info", `Début de partie : ${eur(sim.startCash)} en liquidités.`);
   toast("Nouvelle partie. Observe le graphique, puis avance jour par jour.", "info");
   refresh();
@@ -540,7 +555,7 @@ function onLevels() {
   if (s != null && s >= price()) return toast("Le stop doit être sous le prix actuel.", "err");
   if (t != null && t <= price()) return toast("L'objectif doit être au-dessus du prix actuel.", "err");
   sim.stop = s; sim.target = t;
-  if (s != null) sim.usedStop = true;
+  if (s != null) { sim.usedStop = true; Game.event("stop"); }
   toast("Niveaux enregistrés. Ils sont vérifiés à chaque nouveau jour.", "ok");
   refresh();
 }
@@ -585,6 +600,7 @@ function refresh() {
   $("#st-perf").textContent = pct(perf);
   const sp = $("#stat-perf");
   sp.classList.toggle("is-up", perf >= 0.005); sp.classList.toggle("is-down", perf <= -0.005);
+  coachSim();
   drawChart();
 }
 
@@ -595,6 +611,7 @@ function finish() {
   sim.done = true;
   refresh();
   showResult();
+  Game.event("game");
 }
 
 function showResult() {
@@ -636,6 +653,27 @@ function showResult() {
   if (best == null || ret > best) store.set("simBest", ret);
   drawEquity();
   box.scrollIntoView({ block: "start", behavior: "smooth" });
+}
+
+
+// Le mentor commente la partie : conseil contextuel, jamais un jugement sur les gains.
+let coachKey = "";
+function coachSim() {
+  const box = $("#sim-coach");
+  let m = null;
+  if (!sim || sim.done) m = null;
+  else if (sim.shares && sim.stop == null) m = { k: "nostop", expr: "inquiet", text: "Tu as une position sans stop-loss. Pose-en un : tu sauras exactement combien tu peux perdre au maximum." };
+  else if (sim.shares && sim.stop != null) {
+    const risk = Math.max(0, (sim.avg - sim.stop) * sim.shares), share = 100 * risk / equityNow();
+    m = share > 2
+      ? { k: "big" + Math.round(share), expr: "inquiet", text: `Si ton stop est touché, tu perds environ ${eur(risk)}, soit ${num(share, 1)} % de ton capital. La règle courante est de rester sous 2 %.` }
+      : { k: "ok" + Math.round(risk), expr: "content", text: `Bien vu : si ton stop est touché, tu perds environ ${eur(risk)} (${num(share, 1)} % de ton capital).` };
+  } else if (sim.idx === sim.startIdx && !sim.closed.length) m = { k: "start", expr: "neutre", text: "Observe d'abord le graphique : tendance, moyennes, RSI. Tu peux avancer de quelques jours avant d'acheter." };
+  const key = m ? m.k : "";
+  if (key === coachKey) return;
+  coachKey = key;
+  box.replaceChildren();
+  if (m) box.appendChild(Game.line("malik", m.expr, m.text, { label: "Conseil" }));
 }
 
 /* ---------- Canvas ---------- */
@@ -845,9 +883,3 @@ window.addEventListener("appinstalled", () => $("#install-btn").classList.add("h
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 }
-
-/* ---------- Initialisation ---------- */
-renderGlossary();
-calcRisk();
-applyTheme();
-route();

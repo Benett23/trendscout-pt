@@ -1,0 +1,89 @@
+/* TrendScout — couche jeu (v1). Étend verre-tokens.css v2.2 : à charger APRÈS lui.
+   N'écrase aucune variable existante ; ajoute --ch-*, --xp*, --streak*, --badge-* et les composants .g-* */
+
+:root, [data-theme="light"] {
+  /* Personnages : couleur signature (texte ≥ 4,5:1 sur fond et sur blanc) + teinte douce */
+  --ch-malik: #5B43C2;      --ch-malik-soft: color-mix(in srgb, #6E56CF 14%, transparent);
+  --ch-fomo: #C2410C;       --ch-fomo-soft: color-mix(in srgb, #E8590C 14%, transparent);
+  --ch-conseiller: #8A5F00; --ch-conseiller-soft: color-mix(in srgb, #C9A227 18%, transparent);
+  --ch-revanche: #B0234F;   --ch-revanche-soft: color-mix(in srgb, #C2255C 14%, transparent);
+  --ch-patience: #0B6E80;   --ch-patience-soft: color-mix(in srgb, #0C8599 14%, transparent);
+  /* Progression */
+  --xp: #1F5AE6;            --xp-soft: color-mix(in srgb, #1F5AE6 14%, transparent);
+  --streak: #A44A00;        --streak-soft: color-mix(in srgb, #FF9F0A 16%, transparent);
+  --badge-on: var(--glass-thick); --badge-ring: #5B43C2;
+  --badge-off: var(--fill);       --badge-off-ink: var(--muted);
+}
+[data-theme="dark"] {
+  --ch-malik: #A594F9;      --ch-malik-soft: color-mix(in srgb, #A594F9 18%, transparent);
+  --ch-fomo: #FF8A4C;       --ch-fomo-soft: color-mix(in srgb, #FF8A4C 18%, transparent);
+  --ch-conseiller: #E8C15A; --ch-conseiller-soft: color-mix(in srgb, #E8C15A 16%, transparent);
+  --ch-revanche: #F06595;   --ch-revanche-soft: color-mix(in srgb, #F06595 18%, transparent);
+  --ch-patience: #3BC9DB;   --ch-patience-soft: color-mix(in srgb, #3BC9DB 16%, transparent);
+  --xp: #6E9BFF;            --xp-soft: color-mix(in srgb, #6E9BFF 18%, transparent);
+  --streak: #FFB340;        --streak-soft: color-mix(in srgb, #FFB340 16%, transparent);
+  --badge-ring: #A594F9;
+}
+:root { --g-dur: 220ms; --g-ease: cubic-bezier(.2,.8,.2,1); }
+
+/* Avatars */
+.v .g-av { border-radius: 50%; display: block; flex: none; }
+.v .g-av-48 { width: 48px; height: 48px; } .v .g-av-64 { width: 64px; height: 64px; } .v .g-av-96 { width: 96px; height: 96px; } .v .g-av-160 { width: 160px; height: 160px; }
+
+/* Bulles de dialogue (verre épais + petite pointe) */
+.v .g-bubble { position: relative; padding: 16px 18px; border-radius: 22px; background: var(--glass-thick); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); border: 1px solid var(--glass-edge); font-size: 16px; line-height: 1.55; }
+.v .g-bubble::before { content: ""; position: absolute; left: -7px; top: 22px; width: 14px; height: 14px; background: inherit; border-left: 1px solid var(--glass-edge); border-bottom: 1px solid var(--glass-edge); transform: rotate(45deg); }
+.v .g-bubble.top::before { left: 28px; top: -7px; transform: rotate(135deg); }
+.v .g-bubble .who { display: block; font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.v .g-bubble.mentor { background: color-mix(in srgb, var(--ch-malik) 10%, var(--glass-thick)); }
+
+/* Choix de réponse dans une scène */
+.v .g-choice { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 12px 18px; border-radius: 18px; border: 1px solid var(--glass-edge); background: var(--glass-thick); color: var(--text); font: 500 16px "Inter", sans-serif; text-align: left; cursor: pointer; transition: transform var(--g-dur) var(--g-ease), box-shadow var(--g-dur) var(--g-ease); }
+.v .g-choice:hover { box-shadow: inset 0 0 0 2px var(--accent); }
+.v .g-choice .k { width: 28px; height: 28px; border-radius: 50%; background: var(--fill); display: grid; place-items: center; font-size: 13px; font-weight: 700; flex: none; }
+.v .g-choice.is-chosen { box-shadow: inset 0 0 0 2px var(--accent); }
+.v .g-choice.is-dim { opacity: .55; }
+
+/* XP, rang, série */
+.v .g-xp { height: 10px; border-radius: 999px; background: var(--fill-strong); overflow: hidden; }
+.v .g-xp > span { display: block; height: 100%; border-radius: inherit; background: var(--xp); transition: width 700ms var(--g-ease); }
+.v .g-rank { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 6px; border-radius: 999px; background: var(--xp-soft); color: var(--xp); font-size: 13px; font-weight: 700; }
+.v .g-rank .lvl { width: 22px; height: 22px; border-radius: 50%; background: var(--xp); color: var(--accent-ink); display: grid; place-items: center; font-size: 11.5px; }
+.v .g-streak { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--streak-soft); color: var(--streak); font-size: 13px; font-weight: 700; }
+.v .g-days { display: flex; gap: 6px; }
+.v .g-days span { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--fill); color: var(--muted); }
+.v .g-days span.on { background: var(--streak); color: var(--accent-ink); }
+.v .g-days span.today { box-shadow: inset 0 0 0 2px var(--streak); background: transparent; color: var(--streak); }
+
+/* Badges : obtenu / verrouillé (forme + icône, jamais la couleur seule) */
+.v .g-badge { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; font-size: 13px; font-weight: 600; width: 112px; }
+.v .g-badge .medal { width: 72px; height: 72px; border-radius: 22px; display: grid; place-items: center; background: var(--badge-on); box-shadow: inset 0 0 0 2.5px var(--badge-ring), 0 6px 18px rgba(0,0,0,.08); color: var(--badge-ring); }
+.v .g-badge.locked .medal { background: var(--badge-off); box-shadow: inset 0 0 0 1.5px var(--hairline); color: var(--badge-off-ink); border: 2px dashed var(--fill-strong); }
+.v .g-badge .sub { font-size: 11.5px; font-weight: 500; color: var(--muted); }
+
+/* Mission */
+.v .g-mission { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 22px; background: var(--glass-thick); border: 1px solid var(--glass-edge); }
+.v .g-check { display: flex; align-items: center; gap: 10px; font-size: 14.5px; min-height: 32px; }
+.v .g-check .box { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--fill-strong); display: grid; place-items: center; flex: none; font-size: 12px; font-weight: 800; color: transparent; }
+.v .g-check.done .box { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.v .g-check.done .t { color: var(--muted); }
+.v .g-xp-pill { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--xp-soft); color: var(--xp); font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+
+/* Carte d'aventure */
+.v .g-node { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; flex: none; }
+.v .g-node.done { background: var(--accent); color: var(--accent-ink); }
+.v .g-node.current { background: var(--glass-thick); box-shadow: inset 0 0 0 3px var(--accent), 0 0 0 8px var(--xp-soft); color: var(--accent); }
+.v .g-node.locked { background: var(--fill); color: var(--muted); border: 2px dashed var(--fill-strong); }
+.v .g-path { border-left: 3px dotted var(--fill-strong); }
+
+/* Toast de récompense : sobre, pas de confettis */
+.v .g-reward { display: inline-flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 18px 6px 6px; border-radius: 999px; background: var(--glass-thick); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); border: 1px solid var(--glass-edge); box-shadow: var(--shadow); font-size: 14.5px; font-weight: 500; animation: g-rise var(--g-dur) var(--g-ease) both; }
+
+/* Chargement */
+.v .g-skel { border-radius: 12px; background: linear-gradient(90deg, var(--fill) 0%, var(--fill-strong) 50%, var(--fill) 100%); background-size: 200% 100%; animation: g-shimmer 1.6s linear infinite; }
+
+@keyframes g-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes g-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .v .g-reward, .v .g-skel, .v .g-choice, .v .g-xp > span { animation: none !important; transition: none !important; }
+}
