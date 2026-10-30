@@ -556,7 +556,7 @@ $$("#tool-calc input").forEach(i => i.addEventListener("input", calcRisk));
 
 /* ================= SIMULATEUR ================= */
 const FEE = 0.001;
-const WARMUP = 60, PLAY = 120;
+const WARMUP = 60, PLAY = 500;
 const SCENARIOS = {
   bull: { name: "Tendance haussière", mu: 0.0014, sigma: 0.012, kappa: 0 },
   bear: { name: "Tendance baissière", mu: -0.0014, sigma: 0.012, kappa: 0 },
@@ -757,7 +757,7 @@ function showResult() {
   const n = sim.closed.length;
   const tips = [];
   if (n === 0) tips.push("Tu n'as pris aucune position. Rester à l'écart est une décision valable, mais pour progresser, teste de petites positions avec un stop.");
-  if (n > 12) tips.push(`${n} trades clôturés en 120 jours : attention au surtrading, les frais (${eur(sim.fees)}) pèsent sur ta performance.`);
+  if (n > PLAY / 10) tips.push(`${n} trades clôturés en ${PLAY} jours : attention au surtrading, les frais (${eur(sim.fees)}) pèsent sur ta performance.`);
   if (n > 0 && !sim.usedStop) tips.push("Tu n'as jamais utilisé de stop-loss. Définis ta perte maximale avant d'entrer (voir la leçon « Gestion du risque »).");
   if (mdd > 15) tips.push(`Ton capital a connu une baisse maximale de ${num(mdd, 1)} %. Réduis la taille de tes positions pour mieux supporter les creux.`);
   if (n >= 3 && wins / n < 0.4 && ret > 0) tips.push("Peu de trades gagnants mais un résultat positif : tes gains sont plus gros que tes pertes, c'est le bon réflexe.");
@@ -974,6 +974,7 @@ $("#btn-max").onclick = () => { if (sim) $("#qty").value = Math.max(1, maxQty())
 $("#btn-levels").onclick = onLevels;
 $("#btn-next").onclick = () => { stopAuto(); nextDay(); };
 $("#btn-week").onclick = () => { stopAuto(); advance(5); };
+$("#btn-month").onclick = () => { stopAuto(); advance(20); };
 $("#btn-auto").onclick = toggleAuto;
 
 // confirmation intégrée à la page (confirm() est bloqué dans les pages publiées)
