@@ -7,6 +7,8 @@ Application web pédagogique en français, sans dépendance ni étape de build. 
 - **Simulateur** : 10 000 € virtuels sur un marché fictif. Chandeliers (hausse creuse, baisse pleine), SMA 20/50, RSI 14, ordres, stop-loss et objectif (gaps gérés), frais 0,1 %, repères d'achat/vente, journal, bilan avec courbe de capital et conseils.
 - **Quiz** : 10 questions aléatoires. **Calculateur** : taille de position avec schéma. **Glossaire** : 42 termes.
 
+**Site en ligne** : https://benett23.github.io/trendscout-pt/
+
 Les données sont **fictives** ; l'outil ne constitue pas un conseil en investissement.
 
 ## Lancer en local (Visual Studio Code)
