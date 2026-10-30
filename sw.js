@@ -1,9 +1,16 @@
 // Service worker : permet d'utiliser l'application hors ligne une fois chargée.
 // Stratégie « réseau d'abord, cache en secours » : les mises à jour arrivent dès qu'il y a du réseau.
-const CACHE = "trendscout-v4";
+const CACHE = "trendscout-v5";
 const ASSETS = [
   "./",
   "index.html",
+  "app.html",
+  "vitrine.css",
+  "vitrine.js",
+  "images/graphique-clair.svg",
+  "images/graphique-sombre.svg",
+  "images/graphique-mobile-clair.svg",
+  "images/graphique-mobile-sombre.svg",
   "tokens.css",
   "jeu-tokens.css",
   "accueil-tokens.css",
@@ -63,6 +70,6 @@ self.addEventListener("fetch", e => {
     fetch(req).then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
       return res;
-    }).catch(() => caches.match(req).then(r => r || caches.match("index.html")))
+    }).catch(() => caches.match(req).then(r => r || caches.match("app.html")))
   );
 });

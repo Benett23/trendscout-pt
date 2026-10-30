@@ -3,14 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>TrendScout – Apprendre la bourse</title>
-  <meta name="description" content="Leçons, simulateur de trading sur données fictives, quiz et calculateur de risque pour apprendre la bourse sans risque.">
-  <meta name="theme-color" content="#F2F2F5" id="meta-theme">
+  <title>TrendScout · Apprendre la bourse sans risque, gratuitement</title>
+  <meta name="description" content="Apprends la bourse pas à pas : leçons courtes, quiz corrigés et simulateur avec 10 000 € fictifs. Gratuit, sans argent réel, sans compte.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Apprends la bourse. Sans risquer un euro.">
+  <meta property="og:description" content="Leçons courtes, simulateur avec 10 000 € fictifs et un mentor qui explique chaque erreur. Gratuit, sans compte.">
+  <!-- Si tu changes d'adresse de site, remplace le domaine ci-dessous (l'aperçu de partage en dépend). -->
+  <meta property="og:image" content="https://benett23.github.io/trendscout-pt/images/trendscout-partage-1200x630.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TrendScout : apprends la bourse sans risquer un euro, avec Malik ton mentor.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#F2F2F5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E0E12" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <script>
-    // Applique le thème avant l'affichage pour éviter un flash.
+    // Applique le thème avant l'affichage (même choix que dans l'application).
     (function () {
       var t = null;
       try { t = JSON.parse(localStorage.getItem("ts_theme")); } catch (e) {}
@@ -21,283 +32,253 @@
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="jeu-tokens.css">
   <link rel="stylesheet" href="accueil-tokens.css">
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="vitrine.css">
 </head>
 <body>
-  <!-- Icônes -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></symbol>
-      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M7 4v3M7 14v3M12 8v2M12 17v3M17 3v3M17 12v4"/><rect x="5.5" y="7" width="3" height="7" rx="1"/><rect x="10.5" y="10" width="3" height="7" rx="1"/><rect x="15.5" y="6" width="3" height="6" rx="1"/></symbol>
-      <symbol id="i-quiz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1.1.9-1.1 1.7"/><circle cx="12" cy="17" r=".7" fill="currentColor"/></symbol>
-      <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></symbol>
-      <symbol id="i-gloss" viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 8h6M9 12h6"/></symbol>
-      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
-      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z"/></symbol>
-      <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
-      <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
-      <symbol id="i-stop" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></symbol>
-      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V4M6 5h11l-2 4 2 4H6"/></symbol>
-      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
-      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
-      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></symbol>
-      <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
-      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
-      <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
-      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 21a6 6 0 0 0 6-6c0-3-2-4.5-3-7-1 1-1.5 2-1.5 3.5C12.5 9 12 6 12 3c-3 3-6 6-6 12a6 6 0 0 0 6 6z"/></symbol>
-      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
-      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
-      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
-      <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
-      <symbol id="n-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20h-5.5v-6h-5v6H4z"/></symbol>
-      <symbol id="n-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></symbol>
-      <symbol id="n-book" viewBox="0 0 24 24"><path d="M3 5.5c2.5-1 5.5-1 9 1v13c-3.5-2-6.5-2-9-1z"/><path d="M21 5.5c-2.5-1-5.5-1-9 1v13c3.5-2 6.5-2 9-1z"/></symbol>
-      <symbol id="n-chart" viewBox="0 0 24 24"><path d="M7 3v4M7 15v6M17 3v3M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1"/><rect x="14.5" y="6" width="5" height="11" rx="1"/></symbol>
-      <symbol id="n-quiz" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="m8 12.5 2.8 2.8L16.5 9"/></symbol>
-      <symbol id="n-calc" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="3"/><path d="M8.5 7h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></symbol>
-      <symbol id="n-gloss" viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/></symbol>
-      <symbol id="n-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></symbol>
-      <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
-    </defs>
-  </svg>
+<div class="v l-root" id="root">
+  <div class="orb o1" aria-hidden="true"></div>
+  <div class="orb o2" aria-hidden="true"></div>
+  <div class="orb o3" aria-hidden="true"></div>
+  <div class="orb o4" aria-hidden="true"></div>
 
-  <div class="v" id="app">
-    <div class="orbs" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i></div>
-
-    <div class="layout">
-      <!-- Barre latérale (ordinateur) -->
-      <aside class="side glass">
-        <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 34 34"><path d="M6 25 13 17.5 18 21.5 27 11" fill="none" stroke="var(--accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="11" r="4" fill="var(--accent)"/></svg></span><span class="title-m">TrendScout</span></a>
-        <nav class="side-nav" aria-label="Navigation principale">
-          <a class="nav-link is-active" data-tab="home" data-hash="home" href="#home"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-home"/></svg>Accueil</a>
-          <a class="nav-link" data-tab="adventure" data-hash="adventure" href="#adventure"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-flag"/></svg>Aventure</a>
-          <a class="nav-link" data-tab="learn" data-hash="learn" href="#learn"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-book"/></svg>Apprendre<span class="nav-count" id="nav-learn-count"></span></a>
-          <a class="nav-link" data-tab="sim" data-hash="sim" href="#sim"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-chart"/></svg>Simulateur<span class="nav-dot hidden" id="nav-sim-dot" role="img" aria-label="Partie en cours"></span></a>
-          <a class="nav-link" data-tab="review" data-hash="quiz" href="#quiz"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-quiz"/></svg>Quiz</a>
-          <span class="nav-gap"></span>
-          <a class="nav-link" data-tab="tools" data-hash="risk" href="#risk"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-calc"/></svg>Calculateur</a>
-          <a class="nav-link" data-tab="tools" data-hash="gloss" href="#gloss"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-gloss"/></svg>Glossaire</a>
+  <div class="page">
+    <div class="l-wrap" style="padding-top: 14px">
+      <header class="l-header" role="banner">
+        <a href="#haut" class="logo-link" aria-label="TrendScout, retour en haut">
+          <span class="brand-mark"><svg width="21" height="21" viewBox="0 0 34 34" aria-hidden="true"><path d="M6 25 13 17.5 18 21.5 27 11" fill="none" stroke="var(--accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="11" r="4" fill="var(--accent)"/></svg></span>
+          <span class="logo-txt">TrendScout</span>
+        </a>
+        <nav aria-label="Sections de la page" class="l-hide-sm hd-nav">
+          <a href="#comment" class="l-navlink">Comment ça marche</a>
+          <a href="#aventure" class="l-navlink">Aventure</a>
+          <a href="#faq" class="l-navlink">FAQ</a>
         </nav>
-        <div class="side-foot">
-          <button class="btn btn-plain btn-sm hidden" id="install-btn" type="button"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#i-install"/></svg>Installer l'app</button>
-          <button class="btn btn-plain btn-sm theme-btn" type="button"></button>
-          <p class="caption">Outil pédagogique : données fictives, aucun conseil en investissement. Investir comporte un risque de perte en capital.</p>
-        </div>
-      </aside>
-
-      <!-- Barre du haut (mobile) -->
-      <header class="mtop">
-        <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 34 34"><path d="M6 25 13 17.5 18 21.5 27 11" fill="none" stroke="var(--accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="11" r="4" fill="var(--accent)"/></svg></span><span class="title-m">TrendScout</span></a>
-        <button class="btn btn-plain btn-sm theme-btn" type="button"></button>
+        <button class="l-icon-btn" id="theme-btn" type="button" style="margin-left: auto"></button>
+        <a href="app.html#home" class="btn btn-primary cta-go">Commencer</a>
       </header>
-
-      <main id="main">
-        <p class="disclaimer caption">Outil pédagogique : données fictives, aucun conseil en investissement. Investir comporte un risque de perte en capital.</p>
-
-        <!-- ACCUEIL -->
-        <section id="tab-home" class="tab active" data-title="Accueil">
-          <header class="page-head">
-            <div class="page-head-txt">
-              <span class="caption" id="home-kicker"></span>
-              <h1 class="title-xl" id="home-title"></h1>
-            </div>
-          </header>
-          <div class="glass-thick shadow resume" id="home-resume">
-            <span id="resume-av"></span>
-            <div class="resume-txt">
-              <span class="badge accent" id="resume-badge"></span>
-              <span class="title-l" id="resume-title"></span>
-              <span class="muted" id="resume-desc"></span>
-              <div class="bar"><span id="resume-bar"></span></div>
-            </div>
-            <button class="btn btn-primary resume-btn" id="resume-btn" type="button"></button>
-          </div>
-          <div class="home-cards">
-            <a class="glass home-card" href="#quiz">
-              <span class="hc-ic hc-accent"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-quiz"/></svg></span>
-              <span class="title-m">J'ai 2 minutes</span>
-              <span class="muted">Des questions de révision sur ce que tu as déjà vu, corrigées en direct.</span>
-              <span class="link">Lancer ›</span>
-            </a>
-            <a class="glass home-card" href="#sim">
-              <span class="hc-ic hc-up"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-chart"/></svg></span>
-              <span class="title-m">Pratiquer au simulateur</span>
-              <span class="muted">10 000 € fictifs, un marché inventé : apprends sans risque.</span>
-              <span class="link">Jouer ›</span>
-            </a>
-          </div>
-        </section>
-
-        <!-- APPRENDRE -->
-        <section id="tab-learn" class="tab" data-title="Apprendre">
-          <div id="path-view">
-            <header class="page-head">
-              <div class="page-head-txt">
-                <span class="caption">Ton parcours</span>
-                <h1 class="title-xl">Apprendre.</h1>
-                <p class="lead muted">4 niveaux, des leçons courtes et un examen à la fin de chaque niveau. Chaque étape se valide en répondant juste.</p>
-              </div>
-              <div class="glass prog-card">
-                <div class="prog-top"><span>Progression</span><span class="muted" id="learn-progress"></span></div>
-                <div class="bar" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" id="learn-barwrap"><span id="learn-bar"></span></div>
-              </div>
-            </header>
-            <div id="modules" class="modules"></div>
-          </div>
-          <article id="step-view" class="glass-thick lesson hidden"></article>
-        </section>
-
-        <!-- AVENTURE -->
-        <section id="tab-adventure" class="tab" data-title="Aventure">
-          <div id="adv-home"></div>
-          <article id="adv-scene" class="glass-thick lesson hidden"></article>
-        </section>
-
-        <!-- SIMULATEUR -->
-        <section id="tab-sim" class="tab" data-title="Simulateur">
-          <div id="sim-setup" class="glass-thick panel">
-            <h2 class="title-l">Simulateur de trading</h2>
-            <p class="muted">Tu as <strong>10 000 €</strong> virtuels. Le marché est généré au hasard : tu ne sais pas s'il est haussier, baissier ou latéral. Avance jour après jour, analyse le graphique, achète et vends. Frais : 0,1 % par ordre.</p>
-            <div class="field narrow">
-              <label for="sim-scenario">Scénario</label>
-              <select id="sim-scenario" class="input">
-                <option value="mystery">Mystère (recommandé)</option>
-                <option value="bull">Tendance haussière</option>
-                <option value="bear">Tendance baissière</option>
-                <option value="range">Marché latéral</option>
-                <option value="volatile">Marché volatil</option>
-              </select>
-              <span class="help">En mode mystère, le scénario est révélé à la fin de la partie.</span>
-            </div>
-            <div><button id="sim-start" class="btn btn-primary" type="button">Démarrer une partie</button></div>
-          </div>
-
-          <div id="sim-game" class="hidden">
-            <div class="stats glass">
-              <div class="stat"><span class="k">Jour</span><span class="v" id="st-day">–</span></div>
-              <div class="stat"><span class="k">Prix</span><span class="v" id="st-price">–</span></div>
-              <div class="stat"><span class="k">Liquidités</span><span class="v" id="st-cash">–</span></div>
-              <div class="stat"><span class="k">Position</span><span class="v" id="st-pos">–</span></div>
-              <div class="stat"><span class="k">Valeur totale</span><span class="v" id="st-equity">–</span></div>
-              <div class="stat" id="stat-perf"><span class="k">Performance</span><span class="v" id="st-perf">–</span></div>
-            </div>
-
-            <div class="glass chart-card">
-              <div class="chart-bar">
-                <div class="seg" role="group" aria-label="Indicateurs du graphique">
-                  <button type="button" class="on" data-ind="sma20" aria-pressed="true"><i class="sw" style="background:var(--c-sma20)"></i>SMA 20</button>
-                  <button type="button" class="on" data-ind="sma50" aria-pressed="true"><i class="sw" style="background:var(--c-sma50)"></i>SMA 50</button>
-                  <button type="button" class="on" data-ind="rsi" aria-pressed="true"><i class="sw" style="background:var(--c-rsi)"></i>RSI 14</button>
-                </div>
-                <span id="ohlc" class="caption"></span>
-              </div>
-              <canvas id="chart" role="img" aria-label="Graphique en chandeliers du marché simulé"></canvas>
-              <p class="caption legend"><span><i class="cd up"></i>Hausse (creux)</span><span><i class="cd down"></i>Baisse (plein)</span><span>▲ achat · ▼ vente</span></p>
-            </div>
-
-            <div class="timebar glass shadow" role="group" aria-label="Avancer dans le temps">
-              <button id="btn-next" class="btn btn-primary" type="button"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#i-play"/></svg>Jour suivant</button>
-              <button id="btn-week" class="btn btn-plain" type="button">+5 jours</button>
-              <button id="btn-auto" class="btn btn-plain" type="button">Auto</button>
-            </div>
-
-            <div id="sim-coach"></div>
-
-            <div class="glass order">
-              <div class="row">
-                <div class="field qty">
-                  <label for="qty">Quantité</label>
-                  <input id="qty" class="input" type="number" inputmode="numeric" min="1" step="1" value="10">
-                </div>
-                <button id="btn-max" class="btn btn-plain" type="button">Max</button>
-                <button id="btn-buy" class="btn btn-buy" type="button"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#i-up"/></svg>Acheter</button>
-                <button id="btn-sell" class="btn btn-sell" type="button"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#i-down"/></svg>Vendre</button>
-                <button id="btn-sell-all" class="btn btn-plain" type="button">Tout vendre</button>
-              </div>
-              <div class="row">
-                <div class="field qty">
-                  <label for="stop">Stop-loss (prix)</label>
-                  <input id="stop" class="input" type="number" inputmode="decimal" step="0.01" placeholder="optionnel">
-                </div>
-                <div class="field qty">
-                  <label for="target">Objectif (prix)</label>
-                  <input id="target" class="input" type="number" inputmode="decimal" step="0.01" placeholder="optionnel">
-                </div>
-                <button id="btn-levels" class="btn btn-plain" type="button">Appliquer</button>
-                <button id="btn-end" class="btn btn-plain end" type="button">Terminer la partie</button>
-              </div>
-            </div>
-
-
-            <div class="glass-thick panel">
-              <h3 class="title-m">Journal des opérations</h3>
-              <div id="journal" class="logs"></div>
-            </div>
-          </div>
-
-          <div id="sim-result" class="glass-thick panel hidden"></div>
-        </section>
-
-        <!-- RÉVISIONS -->
-        <section id="tab-review" class="tab" data-title="Quiz">
-          <div class="glass-thick panel" id="review-box"></div>
-        </section>
-
-        <!-- CALCULATEUR -->
-        <section id="tab-tools" class="tab" data-title="Outils">
-          <div class="seg tools-seg" role="group" aria-label="Choisir un outil">
-            <button type="button" class="on" data-tool="calc" aria-pressed="true">Calculateur</button>
-            <button type="button" data-tool="gloss" aria-pressed="false">Glossaire</button>
-          </div>
-          <div class="glass-thick panel" id="tool-calc">
-            <h2 class="title-l">Calculateur de taille de position</h2>
-            <p class="muted">Détermine combien de titres acheter pour ne risquer qu'un pourcentage fixe de ton capital.</p>
-            <div class="calc">
-              <div class="form-grid">
-                <div class="field"><label for="r-cap">Capital (€)</label><input class="input" id="r-cap" type="number" inputmode="decimal" value="10000" step="100"></div>
-                <div class="field"><label for="r-risk">Risque par trade (%)</label><input class="input" id="r-risk" type="number" inputmode="decimal" value="1" step="0.1"><span class="help">1 à 2 % est une règle courante.</span></div>
-                <div class="field"><label for="r-entry">Prix d'entrée</label><input class="input" id="r-entry" type="number" inputmode="decimal" value="50" step="0.01"></div>
-                <div class="field"><label for="r-stop">Stop-loss</label><input class="input" id="r-stop" type="number" inputmode="decimal" value="48" step="0.01"></div>
-                <div class="field"><label for="r-target">Objectif (optionnel)</label><input class="input" id="r-target" type="number" inputmode="decimal" value="56" step="0.01"></div>
-              </div>
-              <div class="calc-out">
-                <div id="r-schema" class="schema"></div>
-                <div id="r-out" class="result-grid glass"></div>
-                <div id="r-warn" class="keep warn hidden" role="status"><span class="k">Attention</span><p></p></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="glass-thick panel hidden" id="tool-gloss">
-            <h2 class="title-l">Glossaire</h2>
-            <div class="field">
-              <label for="gloss-q">Rechercher un terme</label>
-              <input type="search" id="gloss-q" class="input" placeholder="Ex. : stop-loss, PER, ETF…" autocomplete="off">
-            </div>
-            <div id="gloss-list"></div>
-          </div>
-        </section>
-      </main>
     </div>
 
-    <!-- Barre d'onglets (mobile) -->
-    <nav class="tabbar glass shadow" aria-label="Navigation principale">
-      <a data-tab="home" class="is-active" href="#home"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-home"/></svg>Accueil</a>
-      <a data-tab="adventure" href="#adventure"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-flag"/></svg>Aventure</a>
-      <a data-tab="learn" href="#learn"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-book"/></svg>Apprendre</a>
-      <a data-tab="sim" href="#sim"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-chart"/></svg>Simuler</a>
-      <a data-tab="tools" href="#tools"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-more"/></svg>Outils</a>
-    </nav>
+    <main id="haut">
+      <!-- Hero -->
+      <section class="l-wrap l-stack hero" aria-labelledby="ha">
+        <div class="l-hide-sm hero-malik">
+          <div class="hero-halo"></div>
+          <img src="assets/personnages/malik-pose.svg" alt="Malik, le mentor, en pied, un carnet à la main" width="260" height="520">
+        </div>
+        <div class="hero-txt l-reveal">
+          <span class="l-safe"><span class="dot" aria-hidden="true">✓</span>Données fictives, aucun argent réel</span>
+          <div class="hero-bubble-row">
+            <img class="g-av g-av-64 l-show-sm" src="assets/personnages/malik-encourageant.svg" alt="Malik, le mentor" width="64" height="64">
+            <div class="g-bubble shadow hero-bubble">
+              <span class="who" style="color: var(--ch-malik); font-size: 15px">Malik, ton mentor</span>
+              <h1 id="ha" class="l-h1">Salut ! Je vais t’apprendre la bourse. Sans que tu risques un euro.</h1>
+            </div>
+          </div>
+          <p class="l-lead">Des leçons courtes, un simulateur avec 10 000 € fictifs, et moi pour t’expliquer chaque erreur avant qu’elle ne coûte quoi que ce soit.</p>
+          <div class="l-stack hero-cta">
+            <a href="app.html#home" class="btn btn-primary l-cta cta-go">Commencer</a>
+            <a href="#comment" class="btn btn-plain l-cta">Voir comment ça marche</a>
+          </div>
+          <span class="caption" style="font-size: 14.5px">Gratuit · sans compte · mobile et ordinateur</span>
+        </div>
+      </section>
 
-    <div id="reward-zone" aria-live="polite"></div>
-    <div id="toast-zone" aria-live="polite" aria-atomic="true"></div>
+      <!-- Pourquoi -->
+      <section class="l-wrap l-section" aria-labelledby="p-titre">
+        <div class="sec-head">
+          <span class="l-kicker">Pourquoi TrendScout</span>
+          <h2 id="p-titre" class="l-h2">La bourse fait peur. C’est normal.</h2>
+          <p class="l-lead">Du jargon partout, la peur de perdre, des « conseils » douteux. Ici, tu avances pas à pas, et tes erreurs ne coûtent rien.</p>
+        </div>
+        <div class="why-grid">
+          <div class="glass why-card">
+            <span class="caption" style="text-decoration: line-through">Trop de jargon</span>
+            <span class="title-m">Un mot à la fois.</span>
+            <span class="muted">Des leçons courtes, un glossaire de <span id="n-gloss">42</span> termes, et chaque mot nouveau expliqué au moment où il arrive.</span>
+          </div>
+          <div class="glass why-card">
+            <span class="caption" style="text-decoration: line-through">Peur de perdre</span>
+            <span class="title-m">Tes erreurs sont gratuites.</span>
+            <span class="muted">10 000 € fictifs sur un marché inventé. Tu peux tout rater, recommencer, et comprendre pourquoi.</span>
+          </div>
+          <div class="glass why-card">
+            <span class="caption" style="text-decoration: line-through">Trop de pièges</span>
+            <span class="title-m">Tu les reconnais avant de tomber dedans.</span>
+            <span class="muted">Rumeurs, promesses de gains garantis, envie de se refaire : l’Aventure te les fait rencontrer pour de faux.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comment ça marche -->
+      <section id="comment" class="l-wrap l-section" aria-labelledby="cc">
+        <div class="sec-head">
+          <span class="l-kicker">Comment ça marche</span>
+          <h2 id="cc" class="l-h2">4 niveaux, à ton rythme.</h2>
+          <p class="l-lead">Choisis un niveau pour voir ce qu’il contient.</p>
+        </div>
+        <div role="tablist" aria-label="Niveaux" class="glass lvl-tabs" id="lvl-tabs"></div>
+        <div role="tabpanel" id="lvl-panel" class="glass-thick shadow l-stack lvl-panel" aria-live="polite">
+          <div class="lvl-left">
+            <span class="caption" id="lvl-n"></span>
+            <span class="title-l" id="lvl-title"></span>
+            <ol class="lvl-list" id="lvl-list"></ol>
+            <span class="caption" style="font-size: 14.5px">Après chaque leçon : un quiz corrigé tout de suite par Malik.</span>
+          </div>
+          <div class="lvl-right">
+            <span class="lvl-exam-k">EXAMEN DE FIN DE NIVEAU</span>
+            <div class="row-top">
+              <img class="g-av g-av-64" id="lvl-img" src="assets/personnages/fomo-presse.svg" alt="" width="64" height="64">
+              <p class="g-bubble" id="lvl-bubble" style="margin: 0; font-size: 15.5px"><span class="who" id="lvl-who"></span><span id="lvl-line"></span></p>
+            </div>
+            <span class="caption" style="font-size: 14px">Pas de chrono, essais illimités.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Par où commencer -->
+      <section id="depart" class="l-wrap l-section" aria-labelledby="qz-titre">
+        <div class="glass-thick shadow l-stack depart">
+          <div class="depart-left">
+            <span class="l-kicker">30 secondes</span>
+            <h2 id="qz-titre" class="l-h2">Par où commencer ?</h2>
+            <p class="l-lead" style="margin: 0">Trois questions sur ce que tu sais déjà. On te dit par quel niveau démarrer. Aucune question sur ton argent.</p>
+          </div>
+          <div class="depart-right" id="qz" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- Apprendre en pratiquant -->
+      <section class="l-wrap l-section" aria-labelledby="pr-titre">
+        <div class="sec-head">
+          <span class="l-kicker">Apprendre en pratiquant</span>
+          <h2 id="pr-titre" class="l-h2">Tu comprends en faisant.</h2>
+        </div>
+        <div class="prac-grid">
+          <article class="glass prac-card">
+            <span class="title-l">Le simulateur</span>
+            <span class="muted" style="font-size: 16px">Un marché inventé, 120 jours, des frais réalistes. Tu achètes, tu vends, tu poses tes stops, puis le bilan te montre ce que ta méthode a donné.</span>
+            <div class="glass-thick chart-box">
+              <img id="chart-img" src="images/graphique-clair.svg" alt="Graphique en chandeliers du simulateur avec deux moyennes mobiles, le RSI, et les lignes de prix d’achat, de stop et d’objectif" width="800" height="470">
+            </div>
+            <div class="row-top">
+              <img class="g-av g-av-48" src="assets/personnages/malik-inquiet.svg" alt="Malik, inquiet" width="48" height="48">
+              <p class="g-bubble mentor" style="margin: 0; font-size: 15px"><span class="who" style="color: var(--ch-malik)">Malik, pendant la partie</span>Tu n’as pas mis de stop. Si ça baisse cette nuit, rien ne limitera ta perte.</p>
+            </div>
+          </article>
+          <article class="glass prac-card">
+            <span class="title-l">Des quiz corrigés tout de suite</span>
+            <span class="muted" style="font-size: 16px">Tu réponds, Malik corrige et t’explique. Pas de note qui fait peur : juste ce qu’il faut retenir.</span>
+            <div class="glass-thick quiz-box">
+              <span style="font-weight: 600; font-size: 16px">À quoi sert un stop-loss ?</span>
+              <div class="opt is-disabled" style="min-height: 46px"><span class="dot"></span>À augmenter les gains</div>
+              <div class="opt is-correct" style="min-height: 46px"><span class="dot" style="border-color: var(--up); background: var(--up); color: #FFFFFF; font-size: 12px">✓</span>À limiter la perte maximale<span class="tag" style="color: var(--up)">Bonne réponse</span></div>
+              <div class="opt is-disabled" style="min-height: 46px"><span class="dot"></span>À éviter les frais</div>
+            </div>
+            <div class="row-top">
+              <img class="g-av g-av-48" src="assets/personnages/malik-content.svg" alt="Malik, content" width="48" height="48">
+              <p class="g-bubble mentor" style="margin: 0; font-size: 15px"><span class="who" style="color: var(--ch-malik)">Malik</span>Exactement. Le stop, c’est ta décision prise à froid, avant que le marché ne te mette la pression.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Aventure -->
+      <section id="aventure" class="l-wrap l-section" aria-labelledby="a-titre">
+        <div class="sec-head">
+          <span class="l-kicker">L’Aventure</span>
+          <h2 id="a-titre" class="l-h2">Rencontre ceux qui te feront douter.</h2>
+          <p class="l-lead">Les vrais pièges de la bourse ont un visage. Tu apprends à les reconnaître, avec Malik à tes côtés.</p>
+        </div>
+        <ul aria-label="Les personnages" class="chars">
+          <li class="glass char"><img class="g-av g-av-96" src="assets/personnages/malik-encourageant.svg" alt="Malik, le mentor" width="96" height="96"><span style="font-weight: 700; color: var(--ch-malik)">Malik</span><span class="caption" style="font-size: 14px">Ton mentor. Calme, jamais pressé.</span></li>
+          <li class="glass char"><img class="g-av g-av-96" src="assets/personnages/fomo-excite.svg" alt="Fomo, le copain impulsif" width="96" height="96"><span style="font-weight: 700; color: var(--ch-fomo)">Fomo</span><span class="caption" style="font-size: 14px">Le piège : acheter parce que « ça monte ».</span></li>
+          <li class="glass char"><img class="g-av g-av-96" src="assets/personnages/conseiller-clin-d-oeil.svg" alt="Le Conseiller, en costume brillant" width="96" height="96"><span style="font-weight: 700; color: var(--ch-conseiller)">Le Conseiller</span><span class="caption" style="font-size: 14px">Le piège : les gains « garantis ».</span></li>
+          <li class="glass char"><img class="g-av g-av-96" src="assets/personnages/revanche-tendu.svg" alt="Revanche, tendu" width="96" height="96"><span style="font-weight: 700; color: var(--ch-revanche)">Revanche</span><span class="caption" style="font-size: 14px">Le piège : doubler la mise pour se refaire.</span></li>
+          <li class="glass char"><img class="g-av g-av-96" src="assets/personnages/patience-souriante.svg" alt="Patience, l’investisseuse sereine" width="96" height="96"><span style="font-weight: 700; color: var(--ch-patience)">Patience</span><span class="caption" style="font-size: 14px">Le modèle : un plan, et s’y tenir.</span></li>
+        </ul>
+
+        <div class="glass-thick shadow scene">
+          <span class="caption">Extrait d’une scène · essaie</span>
+          <div class="row-top" style="gap: 14px">
+            <img class="g-av g-av-64" src="assets/personnages/fomo-excite.svg" alt="Fomo, excité" width="64" height="64">
+            <p class="g-bubble scene-q"><span class="who" style="color: var(--ch-fomo); font-size: 13px">Fomo</span>Ça a pris 20 % cette semaine, j’achète tout !</p>
+          </div>
+          <div role="group" aria-label="Que réponds-tu ?" class="scene-choices" id="scene-choices"></div>
+          <span class="caption" id="scene-hint">Choisis une réponse : Malik t’explique ce qu’elle aurait coûté.</span>
+          <div id="scene-reply" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- Zéro risque -->
+      <section class="l-wrap l-section" aria-labelledby="r-titre">
+        <div class="glass-thick l-stack zero">
+          <div class="zero-left">
+            <span class="l-kicker">Rassurant, et c’est voulu</span>
+            <h2 id="r-titre" class="l-h2" style="margin: 0">Ce que tu risques ici :</h2>
+            <p aria-label="zéro euro" class="zero-big">0&nbsp;€</p>
+            <p class="l-lead" style="margin: 0; max-width: 34ch">Pas parce qu’on te le promet : parce qu’il n’existe aucun moyen de mettre de l’argent réel dans TrendScout.</p>
+          </div>
+          <div class="zero-right">
+            <ul class="guarantees">
+              <li><span class="g-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v8H4v-8M2 7h20v5H2zM12 22V7M12 7H8a2.5 2.5 0 1 1 0-5c3 0 4 5 4 5zm0 0h4a2.5 2.5 0 1 0 0-5c-3 0-4 5-4 5z"/></svg></span><span><strong>Gratuit</strong><span class="muted">Pas d’abonnement, rien à payer.</span></span></li>
+              <li><span class="g-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><path d="M3 3l18 18"/></svg></span><span><strong>Sans compte</strong><span class="muted">Rien à créer : ta progression reste sur ton appareil.</span></span></li>
+              <li><span class="g-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M3 3l18 18"/></svg></span><span><strong>Sans argent réel</strong><span class="muted">Impossible de déposer un euro.</span></span></li>
+              <li><span class="g-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="11" rx="2"/><path d="M6 19h6"/><rect x="16" y="9" width="6" height="11" rx="1.5"/></svg></span><span><strong>Mobile et ordinateur</strong><span class="muted">Le même parcours partout.</span></span></li>
+              <li><span class="g-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7M9 11l3 3 3-3"/></svg></span><span><strong>S’installe comme une app</strong><span class="muted">Sans passer par un store.</span></span></li>
+              <li><span class="g-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><path d="M3 3l18 18"/></svg></span><span><strong>Marche hors ligne</strong><span class="muted">Métro, avion, tu continues.</span></span></li>
+            </ul>
+            <p class="caption warn-note" role="note">Outil pédagogique, données fictives, aucun conseil en investissement. Investir comporte un risque de perte en capital.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="l-wrap l-section" aria-labelledby="f-titre">
+        <div class="sec-head">
+          <span class="l-kicker">FAQ</span>
+          <h2 id="f-titre" class="l-h2">Demande à Malik.</h2>
+        </div>
+        <div class="glass-thick shadow faq-box">
+          <div role="group" aria-label="Choisis une question" class="faq-chips" id="faq-chips"></div>
+          <div aria-live="polite" class="faq-chat">
+            <p class="faq-q" id="faq-q"></p>
+            <div class="row-end">
+              <img class="g-av g-av-48" src="assets/personnages/malik-content.svg" alt="Malik" width="48" height="48">
+              <p class="g-bubble mentor faq-a"><span class="who" style="color: var(--ch-malik)">Malik</span><span id="faq-a"></span></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dernier appel -->
+      <section class="l-wrap l-section" aria-labelledby="cta-titre">
+        <div class="glass-thick shadow l-stack final">
+          <img class="g-av final-av" src="assets/personnages/malik-fier.svg" alt="Malik, fier" width="140" height="140">
+          <div class="final-txt">
+            <h2 id="cta-titre" class="l-h2">Prêt à faire tes premières erreurs gratuitement ?</h2>
+            <p class="l-lead">Le niveau 1 commence par une leçon courte. Malik t’attend.</p>
+          </div>
+          <a href="app.html#home" class="btn btn-primary l-cta cta-go">Commencer</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="l-wrap l-footer">
+      <div class="l-stack foot-row">
+        <span style="font-weight: 700; letter-spacing: -0.03em">TrendScout</span>
+        <nav aria-label="Pied de page" class="foot-nav">
+          <a href="#comment" class="l-navlink">Comment ça marche</a>
+          <a href="#aventure" class="l-navlink">Aventure</a>
+          <a href="#faq" class="l-navlink">FAQ</a>
+          <a href="app.html#gloss" class="l-navlink">Glossaire</a>
+        </nav>
+      </div>
+      <p class="foot-warn"><strong>Outil pédagogique, données fictives, aucun conseil en investissement.</strong> Investir comporte un risque de perte en capital.</p>
+    </footer>
   </div>
+</div>
 
-  <script src="data.js"></script>
-  <script src="jeu-data.js"></script>
-  <script src="app.js"></script>
-  <script src="jeu.js"></script>
-  <script src="main.js"></script>
+<script src="data.js"></script>
+<script src="vitrine.js"></script>
 </body>
 </html>

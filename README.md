@@ -2,6 +2,10 @@
 
 Application web pédagogique en français, sans dépendance ni étape de build. Elle fonctionne sur **ordinateur et mobile**, peut s'**installer comme une vraie application** et marche **hors ligne** une fois chargée. Design « Verre » (clair et sombre, police Inter embarquée).
 
+## Pages
+- `index.html` : **page d'accueil publique** (vitrine) : promesse, niveaux, test « Par où commencer ? », scène jouable, FAQ. Le bouton « Commencer » mène à l'application.
+- `app.html` : l'**application** (c'est elle que l'on installe sur l'écran d'accueil).
+
 ## Contenu
 - **Parcours** : 4 niveaux (Les bases · Passer des ordres sans se ruiner · Analyser un marché · Investir sur la durée), 10 leçons et un examen de 6 questions à la fin de chaque niveau. Verrouillage souple : l'étape suivante se débloque quand la précédente est validée, avec un bouton « Je connais déjà ». Validation à environ deux tiers de bonnes réponses.
 - **Quiz en direct** : chaque question s'affiche seule, la bonne réponse et l'explication apparaissent dès que tu réponds.

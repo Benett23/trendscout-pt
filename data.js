@@ -246,7 +246,7 @@ const LESSONS = [
 // L'ordre des leçons suit la progression conseillée (la gestion du risque passe avant l'analyse).
 const MODULES = [
   {
-    id: "n1", title: "Les bases", goal: "Comprendre ce qu'est la bourse, les principaux produits et lire un graphique.",
+    id: "n1", short: "Les bases", title: "Les bases", goal: "Comprendre ce qu'est la bourse, les principaux produits et lire un graphique.",
     lessons: ["bourse", "produits", "graphique"],
     exam: [
       { q: "Une entreprise cotée émet des actions principalement pour…", o: ["Rembourser ses actionnaires", "Lever des capitaux sans emprunter", "Réduire ses impôts", "Fixer le prix de ses produits"], a: 1, e: "En vendant des parts de son capital, l'entreprise obtient des fonds sans avoir à les rembourser comme une dette." },
@@ -258,7 +258,7 @@ const MODULES = [
     ]
   },
   {
-    id: "n2", title: "Passer des ordres sans se ruiner", goal: "Acheter, vendre, limiter ses pertes et garder la tête froide.",
+    id: "n2", short: "Les ordres", title: "Passer des ordres sans se ruiner", goal: "Acheter, vendre, limiter ses pertes et garder la tête froide.",
     lessons: ["ordres", "risque", "psycho"],
     exam: [
       { q: "Tu veux acheter à 40 € maximum, quitte à ne pas être exécuté. Quel ordre utilises-tu ?", o: ["Au marché", "À cours limité", "Stop", "Aucun"], a: 1, e: "L'ordre à cours limité garantit que tu ne paies pas plus que ton prix, mais il peut ne jamais être exécuté." },
@@ -270,7 +270,7 @@ const MODULES = [
     ]
   },
   {
-    id: "n3", title: "Analyser un marché", goal: "Repérer une tendance, utiliser les indicateurs et évaluer une entreprise.",
+    id: "n3", short: "Analyser", title: "Analyser un marché", goal: "Repérer une tendance, utiliser les indicateurs et évaluer une entreprise.",
     lessons: ["technique", "fondamentale"],
     exam: [
       { q: "Le prix casse une résistance et la dépasse. Que devient souvent ce niveau ?", o: ["Il disparaît", "Un support", "Une moyenne mobile", "Un dividende"], a: 1, e: "Un niveau cassé change souvent de rôle : l'ancienne résistance devient un support." },
@@ -282,7 +282,7 @@ const MODULES = [
     ]
   },
   {
-    id: "n4", title: "Investir sur la durée", goal: "Choisir ses ETF, comprendre les enveloppes et maîtriser les frais.",
+    id: "n4", short: "La durée", title: "Investir sur la durée", goal: "Choisir ses ETF, comprendre les enveloppes et maîtriser les frais.",
     lessons: ["etf", "fiscalite"],
     exam: [
       { q: "Deux ETF suivent le même indice : l'un a 0,20 % de frais par an, l'autre 0,60 %. Lequel est préférable, toutes choses égales ?", o: ["Celui à 0,60 %", "Celui à 0,20 %", "Aucun écart", "Celui au nom le plus long"], a: 1, e: "À performance égale, des frais plus faibles laissent plus de rendement à l'investisseur, année après année." },
