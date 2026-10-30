@@ -1,0 +1,123 @@
+/* TrendScout — page d'accueil (v1.1). À charger après verre-tokens.css et jeu-tokens.css.
+   N'écrase rien : ajoute --l-* et les composants .l-* */
+:root {
+  --l-max: 1180px;
+  --l-gutter: clamp(16px, 4vw, 40px);
+  --l-section: clamp(72px, 10vw, 128px);
+  --l-h1: clamp(40px, 6.2vw, 76px);
+  --l-h2: clamp(30px, 4vw, 48px);
+  --l-lead: clamp(17px, 1.6vw, 21px);
+}
+.v .l-wrap { width: 100%; max-width: var(--l-max); margin: 0 auto; padding: 0 var(--l-gutter); }
+.v .l-section { padding-top: var(--l-section); padding-bottom: 0; }
+.v .l-h1 { font-size: var(--l-h1); font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; margin: 0; text-wrap: balance; }
+.v .l-h2 { font-size: var(--l-h2); font-weight: 700; letter-spacing: -0.04em; line-height: 1.08; margin: 0; text-wrap: balance; }
+.v .l-lead { font-size: var(--l-lead); line-height: 1.5; color: var(--muted); margin: 0; max-width: 60ch; text-wrap: pretty; }
+.v .l-kicker { font-size: 14px; font-weight: 600; color: var(--accent); letter-spacing: -0.005em; }
+
+/* En-tête flottant en verre */
+.v .l-header { position: sticky; top: 12px; z-index: 10; display: flex; align-items: center; gap: 18px; min-height: 60px; padding: 8px 8px 8px 18px; border-radius: 999px; background: var(--glass); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); border: 1px solid var(--glass-edge); box-shadow: var(--shadow); }
+.v .l-navlink { display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 999px; color: var(--text); text-decoration: none; font-size: 15px; font-weight: 500; }
+.v .l-navlink:hover, .v .l-navlink.is-hover { background: var(--fill); }
+.v .l-icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--fill); color: var(--text); display: grid; place-items: center; cursor: pointer; }
+.v .l-icon-btn:hover { background: var(--fill-strong); }
+
+/* Pastille de réassurance */
+.v .l-safe { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 14px 0 6px; border-radius: 999px; background: var(--glass-thick); border: 1px solid var(--glass-edge); font-size: 14px; font-weight: 600; }
+.v .l-safe .dot { width: 24px; height: 24px; border-radius: 50%; background: var(--fill); display: grid; place-items: center; font-size: 12px; }
+
+/* Bouton principal grand format */
+.v .l-cta { min-height: 56px; padding: 0 30px; font-size: 17px; }
+
+/* Aperçu d'application (cadre de téléphone en verre) */
+.v .l-phone { width: 300px; border-radius: 44px; padding: 10px; background: var(--glass); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); border: 1px solid var(--glass-edge); box-shadow: var(--shadow), 0 40px 80px rgba(20,20,40,.18); }
+.v .l-phone > .screen { border-radius: 34px; overflow: hidden; background: var(--bg); position: relative; }
+
+/* Carte de niveau */
+.v .l-level { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 24px; border-radius: 26px; background: var(--glass-thick); border: 1px solid var(--glass-edge); transition: transform 200ms ease, box-shadow 200ms ease; text-decoration: none; color: var(--text); }
+.v .l-level:hover, .v .l-level.is-hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.v .l-level .n { width: 44px; height: 44px; border-radius: 14px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; font-size: 18px; }
+.v .l-level ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; }
+.v .l-level li { display: flex; gap: 8px; align-items: baseline; }
+.v .l-level li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--muted); transform: translateY(-2px); }
+.v .l-level .exam { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 16px; background: var(--fill); font-size: 14px; }
+
+/* Accordéon de FAQ (details/summary natif) */
+.v .l-faq { border-radius: 22px; background: var(--glass-thick); border: 1px solid var(--glass-edge); }
+.v .l-faq summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 16px; min-height: 64px; padding: 0 22px; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.v .l-faq summary::-webkit-details-marker { display: none; }
+.v .l-faq summary .plus { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; background: var(--fill); display: grid; place-items: center; flex: none; transition: transform 200ms ease; }
+.v .l-faq[open] summary .plus { transform: rotate(45deg); }
+.v .l-faq .a { padding: 0 22px 22px; font-size: 16px; line-height: 1.6; color: var(--muted); max-width: 70ch; }
+.v .l-faq summary:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 22px; }
+
+/* Pied de page */
+.v .l-footer { margin-top: var(--l-section); padding: 40px 0 32px; border-top: 1px solid var(--hairline); }
+
+/* Apparition douce au défilement */
+.v .l-reveal { animation: l-in 600ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes l-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .v .l-reveal, .v .l-level, .v .l-faq summary .plus { animation: none !important; transition: none !important; transform: none !important; } }
+
+/* Adaptation à la largeur du conteneur (fonctionne aussi dans une maquette 390 px) */
+.v.l-root { container-type: inline-size; }
+.v .l-show-sm { display: none !important; }
+@container (max-width: 760px) {
+  .v .l-hide-sm { display: none !important; }
+  .v .l-show-sm { display: flex !important; }
+  .v .l-stack { flex-direction: column !important; align-items: stretch !important; }
+  .v .l-header { padding-left: 14px; }
+  .v .l-cta { width: 100%; }
+}
+
+/* mobile compact v1.2 : cartes, boutons et bulles resserrés sur smartphone */
+@container (max-width: 760px) {
+  .v.l-root .btn { min-height: 42px !important; padding: 0 16px !important; font-size: 14.5px !important; }
+  .v.l-root .btn-sm { min-height: 34px !important; padding: 0 12px !important; font-size: 13px !important; }
+  .v.l-root .l-cta { min-height: 46px !important; padding: 0 22px !important; font-size: 15.5px !important; }
+  .v.l-root > div[style*="position: relative"] .glass, .v.l-root > div[style*="position: relative"] .glass-thick, .v.l-root > div[style*="position: relative"] .glass-thin { padding: 14px 16px !important; border-radius: 18px !important; }
+  .v.l-root .g-bubble { padding: 10px 12px !important; font-size: 14.5px !important; border-radius: 18px !important; }
+  .v.l-root .g-bubble::before { top: 16px !important; }
+  .v.l-root .g-av-64 { width: 48px !important; height: 48px !important; }
+  .v.l-root .g-av-48 { width: 38px !important; height: 38px !important; }
+  .v.l-root .g-choice { min-height: 46px !important; padding: 10px 14px !important; font-size: 14.5px !important; border-radius: 14px !important; }
+  .v.l-root .opt { min-height: 46px !important; padding: 10px 14px !important; font-size: 14.5px !important; border-radius: 14px !important; }
+  .v.l-root .title-xl { font-size: 30px !important; }
+  .v.l-root .title-l { font-size: 21px !important; }
+  .v.l-root .title-m { font-size: 17px !important; }
+  .v.l-root .l-h1 { font-size: 30px !important; }
+  .v.l-root .l-h2 { font-size: 26px !important; }
+  .v.l-root .l-lead { font-size: 15.5px !important; }
+  .v.l-root .l-section { padding-top: 44px !important; }
+  .v.l-root .l-icon-btn { width: 40px !important; height: 40px !important; }
+  .v.l-root .stat .v { font-size: 17px !important; }
+  .v.l-root .g-reward, .v.l-root .g-mission { padding: 14px 16px !important; }
+  .v.l-root [aria-label="zéro euro"] { font-size: 72px !important; }
+}
+
+  .v.m-root .btn { min-height: 42px !important; padding: 0 16px !important; font-size: 14.5px !important; }
+  .v.m-root .btn-sm { min-height: 34px !important; padding: 0 12px !important; font-size: 13px !important; }
+  .v.m-root .l-cta { min-height: 46px !important; padding: 0 22px !important; font-size: 15.5px !important; }
+  .v.m-root > div[style*="position: relative"] .glass, .v.m-root > div[style*="position: relative"] .glass-thick, .v.m-root > div[style*="position: relative"] .glass-thin { padding: 14px 16px !important; border-radius: 18px !important; }
+  .v.m-root .g-bubble { padding: 10px 12px !important; font-size: 14.5px !important; border-radius: 18px !important; }
+  .v.m-root .g-bubble::before { top: 16px !important; }
+  .v.m-root .g-av-64 { width: 48px !important; height: 48px !important; }
+  .v.m-root .g-av-48 { width: 38px !important; height: 38px !important; }
+  .v.m-root .g-choice { min-height: 46px !important; padding: 10px 14px !important; font-size: 14.5px !important; border-radius: 14px !important; }
+  .v.m-root .opt { min-height: 46px !important; padding: 10px 14px !important; font-size: 14.5px !important; border-radius: 14px !important; }
+  .v.m-root .title-xl { font-size: 30px !important; }
+  .v.m-root .title-l { font-size: 21px !important; }
+  .v.m-root .title-m { font-size: 17px !important; }
+  .v.m-root .l-h1 { font-size: 30px !important; }
+  .v.m-root .l-h2 { font-size: 26px !important; }
+  .v.m-root .l-lead { font-size: 15.5px !important; }
+  .v.m-root .l-section { padding-top: 44px !important; }
+  .v.m-root .l-icon-btn { width: 40px !important; height: 40px !important; }
+  .v.m-root .stat .v { font-size: 17px !important; }
+  .v.m-root .g-reward, .v.m-root .g-mission { padding: 14px 16px !important; }
+  .v.m-root [aria-label="zéro euro"] { font-size: 72px !important; }
+
+/* une valeur de statistique n’hérite pas du fond de la racine .v */
+.v .stat > .v { position: static; overflow: visible; background: none; }
+/* boutons-icônes carrés (retour, fermer) : on garde leur forme ronde */
+.v.m-root .btn[style*="width: 44px"], .v.l-root .btn[style*="width: 44px"] { width: 40px !important; padding: 0 !important; }

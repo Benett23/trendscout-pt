@@ -34,27 +34,31 @@ $$(".theme-btn").forEach(b => b.addEventListener("click", () => { store.set("the
 mq.addEventListener("change", () => { if (!store.get("theme", null)) applyTheme(); });
 
 /* ---------- Navigation ---------- */
-const TABS = ["learn", "adventure", "sim", "review", "tools"];
+const TABS = ["home", "adventure", "learn", "sim", "review", "tools"];
 const ALIAS = { quiz: "review", risk: "tools", gloss: "tools" };
 let reviewBusy = false;
 function route() {
-  const h = location.hash.slice(1);
+  const h = location.hash.slice(1) || "home";
   if (h === "risk" || h === "gloss") setTool(h === "risk" ? "calc" : "gloss");
   let t = ALIAS[h] || h;
-  if (!TABS.includes(t)) t = "learn";
+  if (!TABS.includes(t)) t = "home";
+  const cur = h === "review" ? "quiz" : h;   // nom affiché dans l'adresse
   $$(".tab").forEach(x => x.classList.toggle("active", x.id === "tab-" + t));
   $$("[data-tab]").forEach(a => {
-    const on = a.dataset.tab === t;
+    // barre latérale : on compare l'adresse exacte ; barre d'onglets : on compare l'écran
+    const on = a.classList.contains("nav-link") ? a.dataset.hash === cur : a.dataset.tab === t;
     a.classList.toggle("is-active", on);
     if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
-  document.title = $("#tab-" + t).dataset.title + " – TrendScout";
+  document.title = (h === "risk" ? "Calculateur" : h === "gloss" ? "Glossaire" : $("#tab-" + t).dataset.title) + " – TrendScout";
   window.scrollTo(0, 0);
-  clearTimeout(toastTimer); $("#toast-zone").innerHTML = "";
+  clearTimeout(toastTimer); $$(".toast", $("#toast-zone")).forEach(x => x.remove());
+  if (t === "home") renderHome();
   if (t === "learn" && $("#step-view").classList.contains("hidden")) renderPath();
   if (t === "review" && !reviewBusy) renderReview();
   if (t === "adventure" && $("#adv-scene").classList.contains("hidden")) renderAdventure();
   if (t === "sim") { drawChart(); drawEquity(); }
+  updateNavBadges();
 }
 window.addEventListener("hashchange", route);
 
@@ -64,6 +68,18 @@ function setTool(k) {
   $("#tool-gloss").classList.toggle("hidden", k !== "gloss");
 }
 $$("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.dataset.tool)));
+
+// Petits repères dans la navigation : leçons validées et partie en cours.
+function updateNavBadges() {
+  const lessons = STEPS.filter(s => s.kind === "lesson");
+  $("#nav-learn-count").textContent = `${lessons.filter(stepDone).length}/${lessons.length}`;
+  $("#nav-sim-dot").classList.toggle("hidden", !(typeof sim !== "undefined" && sim && !sim.done));
+}
+
+// Le design compact (boutons 42 px, cartes resserrées) s'active sur la mise en page mobile.
+const mobileMq = matchMedia("(max-width: 899px)");
+const syncMobileRoot = () => $("#app").classList.toggle("m-root", mobileMq.matches);
+mobileMq.addEventListener("change", () => { syncMobileRoot(); drawChart(); drawEquity(); });
 
 /* ---------- Toast ---------- */
 let toastTimer = null;
@@ -159,6 +175,38 @@ function runQuiz(host, questions, onFinish) {
   show();
 }
 
+/* ---------- Accueil de l'application ---------- */
+function renderHome() {
+  const done = STEPS.filter(stepDone).length;
+  const lessons = STEPS.filter(s => s.kind === "lesson");
+  const nx = STEPS.find(s => !stepDone(s));
+  const g = Game.greeting(nx && stepTitle(nx), done);
+  $("#home-kicker").textContent = nx
+    ? `Niveau ${nx.mi + 1} · ${nx.mod.title} · ${lessons.filter(stepDone).length} leçons sur ${lessons.length}`
+    : "Parcours terminé";
+  $("#home-title").textContent = done ? "Reprends où tu en étais." : "Bienvenue. On commence ?";
+  $("#resume-av").innerHTML = avatar("malik", done ? "encourageant" : "content", 64);
+  $("#resume-badge").textContent = nx ? (done ? "Prochaine étape" : "On commence ici") : "Bravo";
+  const btn = $("#resume-btn");
+  if (nx) {
+    const isLesson = nx.kind === "lesson";
+    $("#resume-title").textContent = isLesson ? `Leçon ${lessonNo(nx.id)} · ${stepTitle(nx)}` : stepTitle(nx);
+    $("#resume-desc").textContent = isLesson
+      ? `Environ ${readMin(LESSON[nx.id].html)} minutes de lecture, puis ${LESSON[nx.id].quiz.length} questions corrigées en direct.`
+      : `${nx.mod.exam.length} questions pour valider le niveau ${nx.mi + 1}.`;
+    const steps = STEPS.filter(s => s.mod === nx.mod);
+    $("#resume-bar").style.width = Math.round(100 * steps.filter(stepDone).length / steps.length) + "%";
+    btn.textContent = done ? "Reprendre" : "Commencer";
+    btn.onclick = () => openStep(nx);
+  } else {
+    $("#resume-title").textContent = "Tu as terminé tout le parcours";
+    $("#resume-desc").textContent = g.text;
+    $("#resume-bar").style.width = "100%";
+    btn.textContent = "Revoir la première leçon";
+    btn.onclick = () => openStep(STEPS[0]);
+  }
+}
+
 /* ---------- Parcours ---------- */
 const PASS_RATIO = 0.65; // environ deux tiers de bonnes réponses
 const needed = total => Math.ceil(PASS_RATIO * total - 1e-9);
@@ -195,15 +243,7 @@ function renderPath() {
   const done = STEPS.filter(stepDone).length, total = STEPS.length, p = Math.round(100 * done / total);
   $("#learn-bar").style.width = p + "%";
   $("#learn-barwrap").setAttribute("aria-valuenow", p);
-  $("#learn-progress").textContent = `${done} / ${total} étapes terminées`;
-  const nx = STEPS.find(s => !stepDone(s));
-  const g = Game.greeting(nx && stepTitle(nx), done);
-  $("#coach-hero").replaceChildren(Game.line("malik", g.expr, g.text));
-  $("#strip").innerHTML = Game.strip();
-  const btn = $("#learn-next");
-  if (nx) { btn.textContent = (done ? "Continuer : " : "Commencer : ") + stepTitle(nx); btn.onclick = () => openStep(nx); }
-  else { btn.textContent = "Parcours terminé : revoir la première leçon"; btn.onclick = () => openStep(STEPS[0]); }
-
+  $("#learn-progress").textContent = `${done} / ${total} étapes validées`;
   const box = $("#modules");
   box.innerHTML = "";
   MODULES.forEach((m, mi) => {
@@ -315,9 +355,9 @@ function renderReview() {
   const box = $("#review-box"), pool = reviewPool();
   const missedIds = store.get("missed", []), missedQs = ALL_Q.filter(q => missedIds.includes(q.id));
   const best = store.get("reviewBest", null);
-  box.innerHTML = `<h2 class="title-l">Révisions</h2>`;
+  box.innerHTML = `<h2 class="title-l">Quiz</h2>`;
   if (!pool.length) {
-    const k = el("div", "keep", `<span class="k">Bientôt disponible</span><p>Valide ta première leçon pour débloquer les révisions : tu pourras rejouer des questions au hasard et retravailler tes erreurs.</p><div class="actions"></div>`);
+    const k = el("div", "keep", `<span class="k">Bientôt disponible</span><p>Valide ta première leçon pour débloquer le quiz de révision : tu pourras rejouer des questions au hasard et retravailler tes erreurs.</p><div class="actions"></div>`);
     const a = el("a", "btn btn-primary", "Aller au parcours"); a.href = "#learn";
     $(".actions", k).appendChild(a);
     box.appendChild(k);
@@ -338,7 +378,7 @@ function renderReview() {
 function startReview(qs, kind) {
   reviewBusy = true;
   const box = $("#review-box");
-  box.innerHTML = `<button class="btn btn-plain btn-sm" id="rev-back" type="button">← Révisions</button><h2 class="title-l"></h2><div id="rev-host"></div>`;
+  box.innerHTML = `<button class="btn btn-plain btn-sm" id="rev-back" type="button">← Quiz</button><h2 class="title-l"></h2><div id="rev-host"></div>`;
   $("h2", box).textContent = kind === "errors" ? "Revoir mes erreurs" : "Quiz de révision";
   $("#rev-back").onclick = () => { reviewBusy = false; renderReview(); };
   runQuiz($("#rev-host"), qs, (score, total, host) => {
@@ -601,6 +641,7 @@ function refresh() {
   const sp = $("#stat-perf");
   sp.classList.toggle("is-up", perf >= 0.005); sp.classList.toggle("is-down", perf <= -0.005);
   coachSim();
+  updateNavBadges();
   drawChart();
 }
 
@@ -610,6 +651,7 @@ function finish() {
   if (sim.shares > 0) { sell(sim.shares, price(), "Clôture de fin de partie : vente"); sim.equity[sim.equity.length - 1] = equityNow(); }
   sim.done = true;
   refresh();
+  updateNavBadges();
   showResult();
   Game.event("game");
 }

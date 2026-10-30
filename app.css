@@ -34,32 +34,50 @@ svg.ic, svg.ico { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-li
 
 /* Mise en page */
 .layout {
-  position: relative; z-index: 1; display: grid; grid-template-columns: 264px minmax(0, 1fr); gap: 24px;
+  position: relative; z-index: 1; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px;
   max-width: 1260px; margin: 0 auto;
   padding: 24px max(24px, env(safe-area-inset-right)) 24px max(24px, env(safe-area-inset-left));
 }
 main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.side { position: sticky; top: 24px; align-self: start; height: calc(100dvh - 48px); display: flex; flex-direction: column; gap: 6px; padding: 18px 14px; }
-.side-nav { display: flex; flex-direction: column; gap: 4px; margin-top: 14px; }
-.side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding: 0 4px; }
-.brand { display: flex; align-items: center; gap: 10px; padding: 0 6px; }
-.logo { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(145deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #8E5CF7)); position: relative; flex: none; }
-.logo::before, .logo::after { content: ""; position: absolute; bottom: 7px; width: 4px; border-radius: 2px; background: var(--accent-ink); }
-.logo::before { left: 9px; height: 9px; }
-.logo::after { left: 17px; height: 15px; }
+.side { position: sticky; top: 24px; align-self: start; height: calc(100dvh - 48px); display: flex; flex-direction: column; gap: 4px; padding: 20px 12px; }
+.side-nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-gap { height: 16px; }
+.nav-count { margin-left: auto; font-size: 12px; opacity: .75; }
+.nav-dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.v .nav-link.is-active .nav-dot { background: var(--accent-ink); }
+.side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding: 12px 6px 0; }
+.side-foot .caption { font-size: 11.5px; line-height: 1.45; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 20px; text-decoration: none; color: var(--text); }
+.mtop .brand { padding: 0; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: var(--glass-thick); border: 1px solid var(--glass-edge); box-shadow: 0 3px 10px rgba(31, 90, 230, .25); display: grid; place-items: center; flex: none; }
 .mtop, .v .tabbar { display: none; }
-.disclaimer { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 16px; font-size: 13px; color: var(--muted); }
-.disclaimer .ic { color: var(--warn); }
+.disclaimer { display: none; margin: 0; font-size: 11.5px; line-height: 1.45; }
 .tab { display: none; flex-direction: column; gap: 16px; min-width: 0; }
 .tab.active { display: flex; }
 .panel { padding: 28px; display: flex; flex-direction: column; gap: 16px; border-radius: 28px; }
 .narrow { max-width: 360px; }
 
 /* Accueil / leçons */
-.hero { padding: 8px 4px 4px; display: flex; flex-direction: column; gap: 14px; }
-.hero .lead { font-size: 18px; max-width: 56ch; }
-.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-.progress { display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
+/* En-têtes de page, carte « Reprendre », raccourcis */
+.page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; max-width: 1120px; }
+.page-head-txt { display: flex; flex-direction: column; gap: 10px; }
+.page-head .lead { font-size: 18px; max-width: 54ch; margin: 0; }
+.prog-card { padding: 18px 22px; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
+.prog-top { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
+.prog-top > span:first-child { font-weight: 600; }
+.resume { max-width: 1080px; padding: 28px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+.resume-txt { flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.resume-txt .badge { align-self: flex-start; }
+.resume-txt .bar { max-width: 360px; margin-top: 6px; }
+.resume-btn { min-height: 52px; padding: 0 30px; font-size: 16px; }
+.home-cards { max-width: 1080px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
+.home-card { padding: 24px; display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: var(--text); }
+.home-card .muted { font-size: 15px; }
+.home-card .link { margin-top: auto; }
+.hc-ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; }
+.hc-accent { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.hc-up { background: color-mix(in srgb, var(--up) 14%, transparent); color: var(--up); }
+.v .tools-seg { display: none; }
 .lesson { padding: 32px; border-radius: 28px; }
 .lesson .title-l { margin: 18px 0 6px; }
 .prose { max-width: 68ch; display: flex; flex-direction: column; gap: 12px; }
@@ -240,8 +258,14 @@ canvas#equity { width: 100%; height: 170px; display: block; }
   .v .tabbar { display: flex; position: fixed; z-index: 30; left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
   .v .tabbar a { min-width: 0; padding: 0 2px; }
   .v .title-xl { font-size: 36px; }
-  .hero .lead { font-size: 16.5px; }
-  .panel, .lesson { padding: 20px; border-radius: 24px; }
+  .page-head .lead { font-size: 15px; }
+  .prog-card { min-width: 0; width: 100%; }
+  .resume { padding: 18px; gap: 14px; }
+  .home-card { padding: 18px; }
+  .disclaimer { display: block; }
+  .v .tools-seg { display: inline-flex; }
+  .panel, .lesson { padding: 16px; border-radius: 18px; }
+  .module { padding: 16px; }
   canvas#chart { height: 340px; }
   .timebar { bottom: calc(84px + env(safe-area-inset-bottom)); }
   #toast-zone { bottom: calc(158px + env(safe-area-inset-bottom)); }

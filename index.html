@@ -20,6 +20,7 @@
   </script>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="jeu-tokens.css">
+  <link rel="stylesheet" href="accueil-tokens.css">
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -49,6 +50,14 @@
       <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
       <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
       <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+      <symbol id="n-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20h-5.5v-6h-5v6H4z"/></symbol>
+      <symbol id="n-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></symbol>
+      <symbol id="n-book" viewBox="0 0 24 24"><path d="M3 5.5c2.5-1 5.5-1 9 1v13c-3.5-2-6.5-2-9-1z"/><path d="M21 5.5c-2.5-1-5.5-1-9 1v13c3.5-2 6.5-2 9-1z"/></symbol>
+      <symbol id="n-chart" viewBox="0 0 24 24"><path d="M7 3v4M7 15v6M17 3v3M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1"/><rect x="14.5" y="6" width="5" height="11" rx="1"/></symbol>
+      <symbol id="n-quiz" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="m8 12.5 2.8 2.8L16.5 9"/></symbol>
+      <symbol id="n-calc" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="3"/><path d="M8.5 7h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></symbol>
+      <symbol id="n-gloss" viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/></symbol>
+      <symbol id="n-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></symbol>
       <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
     </defs>
   </svg>
@@ -58,47 +67,82 @@
 
     <div class="layout">
       <!-- Barre latérale (ordinateur) -->
-      <aside class="side glass shadow">
-        <div class="brand"><span class="logo" aria-hidden="true"></span><span class="title-m">TrendScout</span></div>
+      <aside class="side glass">
+        <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 34 34"><path d="M6 25 13 17.5 18 21.5 27 11" fill="none" stroke="var(--accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="11" r="4" fill="var(--accent)"/></svg></span><span class="title-m">TrendScout</span></a>
         <nav class="side-nav" aria-label="Navigation principale">
-          <a class="nav-link is-active" data-tab="learn" href="#learn"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-book"/></svg>Parcours</a>
-          <a class="nav-link" data-tab="adventure" href="#adventure"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-map"/></svg>Aventure</a>
-          <a class="nav-link" data-tab="sim" href="#sim"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-chart"/></svg>Pratique</a>
-          <a class="nav-link" data-tab="review" href="#review"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-quiz"/></svg>Révisions</a>
-          <a class="nav-link" data-tab="tools" href="#tools"><svg class="ic" width="20" height="20" aria-hidden="true"><use href="#i-calc"/></svg>Outils</a>
+          <a class="nav-link is-active" data-tab="home" data-hash="home" href="#home"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-home"/></svg>Accueil</a>
+          <a class="nav-link" data-tab="adventure" data-hash="adventure" href="#adventure"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-flag"/></svg>Aventure</a>
+          <a class="nav-link" data-tab="learn" data-hash="learn" href="#learn"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-book"/></svg>Apprendre<span class="nav-count" id="nav-learn-count"></span></a>
+          <a class="nav-link" data-tab="sim" data-hash="sim" href="#sim"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-chart"/></svg>Simulateur<span class="nav-dot hidden" id="nav-sim-dot" role="img" aria-label="Partie en cours"></span></a>
+          <a class="nav-link" data-tab="review" data-hash="quiz" href="#quiz"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-quiz"/></svg>Quiz</a>
+          <span class="nav-gap"></span>
+          <a class="nav-link" data-tab="tools" data-hash="risk" href="#risk"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-calc"/></svg>Calculateur</a>
+          <a class="nav-link" data-tab="tools" data-hash="gloss" href="#gloss"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#n-gloss"/></svg>Glossaire</a>
         </nav>
         <div class="side-foot">
           <button class="btn btn-plain btn-sm hidden" id="install-btn" type="button"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#i-install"/></svg>Installer l'app</button>
           <button class="btn btn-plain btn-sm theme-btn" type="button"></button>
-          <p class="caption">Données fictives. Aucun conseil en investissement.</p>
+          <p class="caption">Outil pédagogique : données fictives, aucun conseil en investissement. Investir comporte un risque de perte en capital.</p>
         </div>
       </aside>
 
       <!-- Barre du haut (mobile) -->
       <header class="mtop">
-        <div class="brand"><span class="logo" aria-hidden="true"></span><span class="title-m">TrendScout</span></div>
+        <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 34 34"><path d="M6 25 13 17.5 18 21.5 27 11" fill="none" stroke="var(--accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="11" r="4" fill="var(--accent)"/></svg></span><span class="title-m">TrendScout</span></a>
         <button class="btn btn-plain btn-sm theme-btn" type="button"></button>
       </header>
 
       <main id="main">
-        <p class="disclaimer glass-thin"><svg class="ic" width="18" height="18" aria-hidden="true"><use href="#i-info"/></svg><span>Outil pédagogique : données <strong>fictives</strong>, aucun conseil en investissement. Investir comporte un risque de perte en capital.</span></p>
+        <p class="disclaimer caption">Outil pédagogique : données fictives, aucun conseil en investissement. Investir comporte un risque de perte en capital.</p>
 
-        <!-- PARCOURS -->
-        <section id="tab-learn" class="tab active" data-title="Parcours">
-          <div id="path-view">
-            <div class="hero">
-              <h1 class="title-xl">Ton parcours</h1>
-              <p class="lead muted">4 niveaux, des leçons courtes et un examen à la fin de chaque niveau. On te montre toujours la prochaine étape : tu n'as rien à choisir.</p>
-              <div id="coach-hero"></div>
-              <div id="strip"></div>
-              <div class="hero-cta">
-                <button class="btn btn-primary" id="learn-next" type="button"></button>
-              </div>
-              <div class="progress">
-                <div class="bar" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" id="learn-barwrap"><span id="learn-bar"></span></div>
-                <p class="caption" id="learn-progress"></p>
-              </div>
+        <!-- ACCUEIL -->
+        <section id="tab-home" class="tab active" data-title="Accueil">
+          <header class="page-head">
+            <div class="page-head-txt">
+              <span class="caption" id="home-kicker"></span>
+              <h1 class="title-xl" id="home-title"></h1>
             </div>
+          </header>
+          <div class="glass-thick shadow resume" id="home-resume">
+            <span id="resume-av"></span>
+            <div class="resume-txt">
+              <span class="badge accent" id="resume-badge"></span>
+              <span class="title-l" id="resume-title"></span>
+              <span class="muted" id="resume-desc"></span>
+              <div class="bar"><span id="resume-bar"></span></div>
+            </div>
+            <button class="btn btn-primary resume-btn" id="resume-btn" type="button"></button>
+          </div>
+          <div class="home-cards">
+            <a class="glass home-card" href="#quiz">
+              <span class="hc-ic hc-accent"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-quiz"/></svg></span>
+              <span class="title-m">J'ai 2 minutes</span>
+              <span class="muted">Des questions de révision sur ce que tu as déjà vu, corrigées en direct.</span>
+              <span class="link">Lancer ›</span>
+            </a>
+            <a class="glass home-card" href="#sim">
+              <span class="hc-ic hc-up"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-chart"/></svg></span>
+              <span class="title-m">Pratiquer au simulateur</span>
+              <span class="muted">10 000 € fictifs, un marché inventé : apprends sans risque.</span>
+              <span class="link">Jouer ›</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- APPRENDRE -->
+        <section id="tab-learn" class="tab" data-title="Apprendre">
+          <div id="path-view">
+            <header class="page-head">
+              <div class="page-head-txt">
+                <span class="caption">Ton parcours</span>
+                <h1 class="title-xl">Apprendre.</h1>
+                <p class="lead muted">4 niveaux, des leçons courtes et un examen à la fin de chaque niveau. Chaque étape se valide en répondant juste.</p>
+              </div>
+              <div class="glass prog-card">
+                <div class="prog-top"><span>Progression</span><span class="muted" id="learn-progress"></span></div>
+                <div class="bar" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" id="learn-barwrap"><span id="learn-bar"></span></div>
+              </div>
+            </header>
             <div id="modules" class="modules"></div>
           </div>
           <article id="step-view" class="glass-thick lesson hidden"></article>
@@ -111,7 +155,7 @@
         </section>
 
         <!-- SIMULATEUR -->
-        <section id="tab-sim" class="tab" data-title="Pratique">
+        <section id="tab-sim" class="tab" data-title="Simulateur">
           <div id="sim-setup" class="glass-thick panel">
             <h2 class="title-l">Simulateur de trading</h2>
             <p class="muted">Tu as <strong>10 000 €</strong> virtuels. Le marché est généré au hasard : tu ne sais pas s'il est haussier, baissier ou latéral. Avance jour après jour, analyse le graphique, achète et vends. Frais : 0,1 % par ordre.</p>
@@ -196,7 +240,7 @@
         </section>
 
         <!-- RÉVISIONS -->
-        <section id="tab-review" class="tab" data-title="Révisions">
+        <section id="tab-review" class="tab" data-title="Quiz">
           <div class="glass-thick panel" id="review-box"></div>
         </section>
 
@@ -239,11 +283,11 @@
 
     <!-- Barre d'onglets (mobile) -->
     <nav class="tabbar glass shadow" aria-label="Navigation principale">
-      <a data-tab="learn" class="is-active" href="#learn"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-book"/></svg>Parcours</a>
-      <a data-tab="adventure" href="#adventure"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-map"/></svg>Aventure</a>
-      <a data-tab="sim" href="#sim"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-chart"/></svg>Pratique</a>
-      <a data-tab="review" href="#review"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-quiz"/></svg>Révisions</a>
-      <a data-tab="tools" href="#tools"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#i-calc"/></svg>Outils</a>
+      <a data-tab="home" class="is-active" href="#home"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-home"/></svg>Accueil</a>
+      <a data-tab="adventure" href="#adventure"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-flag"/></svg>Aventure</a>
+      <a data-tab="learn" href="#learn"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-book"/></svg>Apprendre</a>
+      <a data-tab="sim" href="#sim"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-chart"/></svg>Simuler</a>
+      <a data-tab="tools" href="#tools"><svg class="ic" width="22" height="22" aria-hidden="true"><use href="#n-more"/></svg>Outils</a>
     </nav>
 
     <div id="reward-zone" aria-live="polite"></div>
