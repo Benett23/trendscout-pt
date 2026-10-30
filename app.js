@@ -34,9 +34,13 @@ $$(".theme-btn").forEach(b => b.addEventListener("click", () => { store.set("the
 mq.addEventListener("change", () => { if (!store.get("theme", null)) applyTheme(); });
 
 /* ---------- Navigation ---------- */
-const TABS = ["learn", "sim", "quiz", "risk", "gloss"];
+const TABS = ["learn", "sim", "review", "tools"];
+const ALIAS = { quiz: "review", risk: "tools", gloss: "tools" };
+let reviewBusy = false;
 function route() {
-  let t = location.hash.slice(1);
+  const h = location.hash.slice(1);
+  if (h === "risk" || h === "gloss") setTool(h === "risk" ? "calc" : "gloss");
+  let t = ALIAS[h] || h;
   if (!TABS.includes(t)) t = "learn";
   $$(".tab").forEach(x => x.classList.toggle("active", x.id === "tab-" + t));
   $$("[data-tab]").forEach(a => {
@@ -47,9 +51,18 @@ function route() {
   document.title = $("#tab-" + t).dataset.title + " – TrendScout";
   window.scrollTo(0, 0);
   clearTimeout(toastTimer); $("#toast-zone").innerHTML = "";
+  if (t === "learn" && $("#step-view").classList.contains("hidden")) renderPath();
+  if (t === "review" && !reviewBusy) renderReview();
   if (t === "sim") { drawChart(); drawEquity(); }
 }
 window.addEventListener("hashchange", route);
+
+function setTool(k) {
+  $$("[data-tool]").forEach(b => { const on = b.dataset.tool === k; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); });
+  $("#tool-calc").classList.toggle("hidden", k !== "calc");
+  $("#tool-gloss").classList.toggle("hidden", k !== "gloss");
+}
+$$("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.dataset.tool)));
 
 /* ---------- Toast ---------- */
 let toastTimer = null;
@@ -64,149 +77,265 @@ function toast(text, kind = "info") {
   toastTimer = setTimeout(() => { z.innerHTML = ""; }, 3800);
 }
 
-/* ---------- Questions (composant partagé) ---------- */
-function renderQuestions(container, questions) {
-  container.innerHTML = "";
-  questions.forEach((qq, qi) => {
-    const box = el("div", "q");
-    const title = el("p", "q-title"); title.textContent = `${qi + 1}. ${qq.q}`;
-    const opts = el("div", "opts"); opts.setAttribute("role", "radiogroup"); opts.setAttribute("aria-label", qq.q);
-    qq.o.forEach((text, oi) => {
-      const l = el("label", "opt", `<input class="sr" type="radio" name="${container.id}-${qi}" value="${oi}"><span class="dot"></span><span class="txt"></span><span class="tag"></span>`);
-      $(".txt", l).textContent = text;
-      opts.appendChild(l);
+/* ---------- Quiz avec correction en direct ---------- */
+// Chaque question s'affiche seule : dès que tu réponds, tu vois si c'est juste et l'explication.
+let qzSeq = 0;
+function prepQuestions(qs) {
+  return qs.map(q => { const idx = shuffle(q.o.map((_, i) => i)); return { id: q.id, q: q.q, o: idx.map(i => q.o[i]), a: idx.indexOf(q.a), e: q.e }; });
+}
+function noteResult(id, ok) {
+  const m = new Set(store.get("missed", []));
+  if (ok) m.delete(id); else m.add(id);
+  store.set("missed", [...m]);
+}
+function addBtn(parent, cls, label, fn) { const b = el("button", cls, label); b.type = "button"; b.addEventListener("click", fn); parent.appendChild(b); return b; }
+
+function runQuiz(host, questions, onFinish) {
+  const qs = prepQuestions(questions);
+  const uid = "qz-title-" + (++qzSeq);
+  let i = 0, score = 0;
+  const missed = [];
+
+  function show() {
+    const q = qs[i];
+    host.innerHTML = "";
+    const head = el("div", "qz-head", `<span class="caption">Question ${i + 1} sur ${qs.length}</span><div class="bar"><span style="width:${100 * i / qs.length}%"></span></div>`);
+    const title = el("p", "q-title"); title.id = uid; title.tabIndex = -1; title.textContent = q.q;
+    const opts = el("div", "opts"); opts.setAttribute("role", "group"); opts.setAttribute("aria-labelledby", uid);
+    const fb = el("div", "qz-fb"); fb.setAttribute("aria-live", "polite");
+    let answered = false;
+    const btns = q.o.map((text, oi) => {
+      const b = el("button", "opt", `<span class="dot"></span><span class="txt"></span><span class="tag"></span>`);
+      b.type = "button"; $(".txt", b).textContent = text;
+      b.addEventListener("click", () => answer(oi));
+      opts.appendChild(b);
+      return b;
     });
-    opts.addEventListener("change", () => $$(".opt", opts).forEach(l => l.classList.toggle("is-selected", $("input", l).checked)));
-    const ex = el("p", "expl hidden"); ex.textContent = qq.e;
-    box.append(title, opts, ex);
-    container.appendChild(box);
-  });
-  return function grade() {
-    let score = 0;
-    $$(".q", container).forEach((box, qi) => {
-      const chosen = $(`input[name="${container.id}-${qi}"]:checked`, box);
-      const right = questions[qi].a;
-      $$(".opt", box).forEach((l, oi) => {
-        const isChosen = chosen && +chosen.value === oi;
-        l.classList.remove("is-selected");
-        l.classList.add("is-disabled");
-        $("input", l).disabled = true;
-        if (oi === right) { l.classList.add("is-correct"); $(".tag", l).innerHTML = ic("check", 16) + (isChosen ? "Bonne réponse" : "À retenir"); }
-        else if (isChosen) { l.classList.add("is-wrong"); $(".tag", l).innerHTML = ic("x", 16) + "Ta réponse"; }
+
+    function answer(oi) {
+      if (answered) return;
+      answered = true;
+      const ok = oi === q.a;
+      btns.forEach((b, k) => {
+        b.classList.add("is-disabled"); b.setAttribute("aria-disabled", "true");
+        if (k === q.a) { b.classList.add("is-correct"); $(".tag", b).innerHTML = ic("check", 16) + "Bonne réponse"; }
+        else if (k === oi) { b.classList.add("is-wrong"); $(".tag", b).innerHTML = ic("x", 16) + "Ta réponse"; }
       });
-      if (chosen && +chosen.value === right) score++;
-      $(".expl", box).classList.remove("hidden");
-    });
-    return score;
-  };
+      if (ok) score++; else missed.push(q);
+      noteResult(q.id, ok);
+      fb.className = "qz-fb " + (ok ? "keep" : "keep warn");
+      fb.innerHTML = `<span class="k">${ok ? "Bien joué" : "Pas tout à fait"}</span><p></p>`;
+      $("p", fb).textContent = (ok ? "" : `La bonne réponse : ${q.o[q.a]}. `) + q.e;
+      const nb = addBtn(fb, "btn btn-primary", i < qs.length - 1 ? "Question suivante →" : "Voir mon résultat", () => { i++; if (i < qs.length) show(); else finish(); });
+      nb.focus({ preventScroll: true });
+      fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    host.append(head, title, opts, fb);
+    if (i > 0) host.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+
+  function finish() {
+    host.innerHTML = "";
+    const sum = el("div", "qz-sum", `<p class="score">${score} / ${qs.length}</p><div class="bar"><span style="width:${100 * score / qs.length}%"></span></div>`);
+    host.appendChild(sum);
+    if (missed.length) {
+      const l = el("div", "qz-missed", `<h4>À revoir</h4><ul></ul>`);
+      missed.forEach(q => {
+        const li = el("li", "", `<strong></strong><span class="caption"></span>`);
+        $("strong", li).textContent = q.q; $(".caption", li).textContent = "Bonne réponse : " + q.o[q.a];
+        $("ul", l).appendChild(li);
+      });
+      host.appendChild(l);
+    }
+    onFinish(score, qs.length, host);
+  }
+  show();
 }
 
-/* ---------- Leçons ---------- */
-function nextLesson() { const done = store.get("lessons", {}); return LESSONS.find(l => !done[l.id]) || null; }
+/* ---------- Parcours ---------- */
+const PASS_RATIO = 0.65; // environ deux tiers de bonnes réponses
+const needed = total => Math.ceil(PASS_RATIO * total - 1e-9);
+const passes = (s, t) => s >= needed(t);
 
-function renderLessons() {
-  const done = store.get("lessons", {});
-  const list = $("#lesson-list");
-  list.innerHTML = "";
-  LESSONS.forEach(ls => {
-    const d = done[ls.id];
-    const b = el("button", "glass shadow lesson-card",
-      `<span class="pill">${ls.level}</span><span class="title-m"></span>` +
-      (d ? `<span class="badge ok">${ic("check", 14)}Validée ${d.score}/${d.total}</span>` : `<span class="badge">À faire · ${ls.quiz.length} questions</span>`));
-    b.type = "button";
-    $(".title-m", b).textContent = ls.title;
-    b.addEventListener("click", () => openLesson(ls));
-    list.appendChild(b);
-  });
-  const n = LESSONS.filter(l => done[l.id]).length;
-  const p = Math.round(100 * n / LESSONS.length);
+const LESSON = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+LESSONS.forEach(l => { l.title = l.title.replace(/^\d+\.\s*/, ""); l.quiz.forEach((q, i) => { q.id = l.id + "-" + i; }); });
+MODULES.forEach(m => m.exam.forEach((q, i) => { q.id = m.id + "-ex-" + i; }));
+const ALL_Q = [...LESSONS.flatMap(l => l.quiz), ...MODULES.flatMap(m => m.exam)];
+
+// Les étapes, dans l'ordre du parcours : leçons du niveau puis examen.
+const STEPS = [];
+MODULES.forEach((m, mi) => {
+  m.lessons.forEach(id => STEPS.push({ kind: "lesson", id, mod: m, mi }));
+  STEPS.push({ kind: "exam", id: m.id, mod: m, mi });
+});
+const lessonNo = id => STEPS.filter(s => s.kind === "lesson").findIndex(s => s.id === id) + 1;
+const stepTitle = s => s.kind === "lesson" ? LESSON[s.id].title : `Examen du niveau ${s.mi + 1}`;
+const stepKey = s => s.kind + ":" + s.id;
+const questionsOf = s => s.kind === "lesson" ? LESSON[s.id].quiz : s.mod.exam;
+const readMin = html => Math.max(2, Math.round(html.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length / 170));
+
+const stepResult = s => (s.kind === "lesson" ? store.get("lessons", {}) : store.get("exams", {}))[s.id];
+const stepSkipped = s => !!store.get("skipped", {})[stepKey(s)];
+const stepDone = s => !!stepResult(s) || stepSkipped(s);
+// "done" : terminée · "open" : à faire · "locked" : l'étape précédente n'est pas terminée
+function stepStatus(s) {
+  if (stepDone(s)) return "done";
+  const i = STEPS.indexOf(s);
+  return i === 0 || stepDone(STEPS[i - 1]) ? "open" : "locked";
+}
+
+function renderPath() {
+  const done = STEPS.filter(stepDone).length, total = STEPS.length, p = Math.round(100 * done / total);
   $("#learn-bar").style.width = p + "%";
   $("#learn-barwrap").setAttribute("aria-valuenow", p);
-  $("#learn-progress").textContent = `${n} / ${LESSONS.length} leçons validées`;
-  const nx = nextLesson();
+  $("#learn-progress").textContent = `${done} / ${total} étapes terminées`;
+  const nx = STEPS.find(s => !stepDone(s));
   const btn = $("#learn-next");
-  btn.textContent = nx ? (n ? "Continuer : " : "Commencer : ") + nx.title.replace(/^\d+\.\s*/, "") : "Tout revoir";
-  btn.onclick = () => openLesson(nx || LESSONS[0]);
-}
+  if (nx) { btn.textContent = (done ? "Continuer : " : "Commencer : ") + stepTitle(nx); btn.onclick = () => openStep(nx); }
+  else { btn.textContent = "Parcours terminé : revoir la première leçon"; btn.onclick = () => openStep(STEPS[0]); }
 
-function openLesson(ls) {
-  if (location.hash !== "#learn") { history.replaceState(null, "", "#learn"); route(); }
-  const view = $("#lesson-view");
-  $(".hero").classList.add("hidden");
-  $("#lesson-list").classList.add("hidden");
-  view.classList.remove("hidden");
-  view.innerHTML = `<button class="btn btn-plain btn-sm" id="lesson-back" type="button">← Toutes les leçons</button>
-    <h2 class="title-l"></h2><div class="prose">${ls.html}</div><div class="divider"></div>
-    <h3 class="title-m">Vérifie tes connaissances</h3><div id="lesson-q"></div>
-    <div class="actions"><button class="btn btn-primary" id="lesson-check" type="button">Corriger</button></div>
-    <div id="lesson-res" class="hidden"></div>`;
-  $("h2", view).textContent = ls.title;
-  const grade = renderQuestions($("#lesson-q"), ls.quiz);
-  $("#lesson-back").onclick = closeLesson;
-  $("#lesson-check").onclick = () => {
-    const score = grade();
-    const res = $("#lesson-res");
-    $("#lesson-check").classList.add("hidden");
-    res.classList.remove("hidden");
-    if (score === ls.quiz.length) {
-      const done = store.get("lessons", {});
-      done[ls.id] = { score, total: ls.quiz.length };
-      store.set("lessons", done);
-      res.className = "keep";
-      res.innerHTML = `<span class="k">Leçon validée</span><p>Bravo, ${score}/${ls.quiz.length} : tout est juste.</p>`;
-      const idx = LESSONS.indexOf(ls);
-      if (LESSONS[idx + 1]) {
-        const nb = el("button", "btn btn-primary", "Leçon suivante →"); nb.type = "button";
-        nb.onclick = () => { renderLessons(); openLesson(LESSONS[idx + 1]); };
-        res.appendChild(nb);
-      }
-    } else {
-      res.className = "keep warn";
-      res.innerHTML = `<span class="k">Presque</span><p>${score}/${ls.quiz.length}. Relis la leçon et réessaie pour la valider.</p>`;
-      const rb = el("button", "btn btn-plain btn-sm", "Réessayer"); rb.type = "button";
-      rb.onclick = () => openLesson(ls);
-      res.appendChild(rb);
-    }
-    res.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  };
-  window.scrollTo(0, 0);
-}
-function closeLesson() {
-  $("#lesson-view").classList.add("hidden");
-  $(".hero").classList.remove("hidden");
-  $("#lesson-list").classList.remove("hidden");
-  renderLessons();
-  window.scrollTo(0, 0);
-}
-
-/* ---------- Quiz libre ---------- */
-function newQuiz() {
-  const all = LESSONS.flatMap(l => l.quiz);
-  const picked = shuffle(all).slice(0, 10).map(q => {
-    const idx = shuffle(q.o.map((_, i) => i));
-    return { q: q.q, o: idx.map(i => q.o[i]), a: idx.indexOf(q.a), e: q.e };
+  const box = $("#modules");
+  box.innerHTML = "";
+  MODULES.forEach((m, mi) => {
+    const steps = STEPS.filter(s => s.mod === m);
+    const d = steps.filter(stepDone).length;
+    const validated = stepDone(steps[steps.length - 1]);
+    const sec = el("section", "glass module",
+      `<header class="mod-head">
+        <div class="mod-top"><span class="pill">Niveau ${mi + 1}</span>${validated ? `<span class="badge ok">${ic("award", 14)}Niveau validé</span>` : ""}</div>
+        <h3 class="title-m"></h3><p class="muted goal"></p>
+        <div class="mod-prog"><div class="bar"><span style="width:${100 * d / steps.length}%"></span></div><span class="caption">${d} / ${steps.length}</span></div>
+      </header><ol class="steps"></ol>`);
+    $(".title-m", sec).textContent = m.title;
+    $(".goal", sec).textContent = m.goal;
+    steps.forEach(s => $(".steps", sec).appendChild(stepRow(s)));
+    box.appendChild(sec);
   });
-  const best = store.get("quizBest", null);
-  const box = $("#quiz-box");
-  box.innerHTML = `<h2 class="title-l">Quiz</h2>
-    <p class="muted">10 questions aléatoires tirées des leçons. ${typeof best === "number" ? `Meilleur score : <strong>${best}/10</strong>.` : "Pas encore de score enregistré."}</p>
-    <div id="quiz-q"></div>
-    <div class="actions"><button class="btn btn-primary" id="quiz-check" type="button">Corriger</button><button class="btn btn-plain hidden" id="quiz-again" type="button">Nouveau quiz</button></div>
-    <div id="quiz-res" class="hidden"></div>`;
-  const grade = renderQuestions($("#quiz-q"), picked);
-  $("#quiz-check").onclick = () => {
-    const s = grade();
-    $("#quiz-check").classList.add("hidden");
-    $("#quiz-again").classList.remove("hidden");
-    const b = store.get("quizBest", null);
-    if (typeof b !== "number" || s > b) store.set("quizBest", s);
-    const r = $("#quiz-res");
-    r.classList.remove("hidden");
-    r.className = s >= 7 ? "keep" : "keep warn";
-    r.innerHTML = `<span class="k">Score</span><p class="score">${s}/${picked.length}</p><p>${s >= 7 ? "Très bien, tu maîtrises les bases." : "Relis les leçons concernées puis réessaie."}</p>`;
-    r.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  };
-  $("#quiz-again").onclick = () => { newQuiz(); window.scrollTo(0, 0); };
+}
+
+function stepRow(s) {
+  const st = stepStatus(s), li = el("li", "step-row " + st);
+  const isLesson = s.kind === "lesson", res = stepResult(s), skipped = stepSkipped(s) && !res;
+  const meta = isLesson
+    ? `Leçon ${lessonNo(s.id)} · ≈ ${readMin(LESSON[s.id].html)} min · ${LESSON[s.id].quiz.length} questions`
+    : `Examen · ${s.mod.exam.length} questions`;
+  const state = st === "done" ? (skipped ? "Passée" : `Validée ${res.score}/${res.total}`) : st === "open" ? "À faire" : "Verrouillée";
+  const main = el("button", "step-main",
+    `<span class="step-ic ${st}">${ic(st === "done" ? "check" : st === "open" ? "play" : "lock", 16, "ico")}</span>` +
+    `<span class="step-txt"><strong></strong><span class="caption"></span></span><span class="badge ${st === "done" ? "ok" : st === "open" ? "accent" : ""}"></span>`);
+  main.type = "button";
+  $("strong", main).textContent = stepTitle(s);
+  $(".caption", main).textContent = st === "locked" ? "Termine l'étape précédente pour la débloquer" : meta;
+  $(".badge", main).textContent = state;
+  if (st === "locked") main.disabled = true; else main.addEventListener("click", () => openStep(s));
+  li.appendChild(main);
+  if (st === "open") {
+    addBtn(li, "btn btn-plain btn-sm skip", isLesson ? "Je connais déjà" : "Je connais ce niveau", () => {
+      const o = store.get("skipped", {}); o[stepKey(s)] = true; store.set("skipped", o);
+      toast("Étape passée.", "info");
+      renderPath();
+    });
+  }
+  return li;
+}
+
+function openStep(s) {
+  if (stepStatus(s) === "locked") return;
+  if (location.hash !== "#learn") { history.replaceState(null, "", "#learn"); route(); }
+  const isLesson = s.kind === "lesson", qs = questionsOf(s);
+  $("#path-view").classList.add("hidden");
+  const view = $("#step-view");
+  view.classList.remove("hidden");
+  view.innerHTML = `<button class="btn btn-plain btn-sm" id="step-back" type="button">← Retour au parcours</button>
+    <div class="step-kicker"><span class="pill">Niveau ${s.mi + 1} · ${isLesson ? "Leçon " + lessonNo(s.id) : "Examen"}</span></div>
+    <h2 class="title-l"></h2>` +
+    (isLesson
+      ? `<p class="caption">≈ ${readMin(LESSON[s.id].html)} min de lecture · ${qs.length} questions</p><div class="prose">${LESSON[s.id].html}</div><div class="divider"></div>
+         <h3 class="title-m">Vérifie tes connaissances</h3><p class="muted">Tu vois la bonne réponse et l'explication dès que tu réponds.</p>`
+      : `<p class="muted">${qs.length} questions sur ce niveau, jamais vues dans les leçons. Il faut au moins ${needed(qs.length)} bonnes réponses pour valider. Tu vois la correction après chaque réponse.</p>`) +
+    `<div id="quiz-host"></div>`;
+  $("h2", view).textContent = isLesson ? LESSON[s.id].title : `Examen : niveau ${s.mi + 1}, ${s.mod.title}`;
+  $("#step-back").onclick = closeStep;
+  runQuiz($("#quiz-host"), isLesson ? qs : shuffle(qs), (score, total, host) => finishStep(s, score, total, host));
+  window.scrollTo(0, 0);
+}
+
+function finishStep(s, score, total, host) {
+  const ok = passes(score, total), isLesson = s.kind === "lesson";
+  if (ok) {
+    const key = isLesson ? "lessons" : "exams", o = store.get(key, {}), prev = o[s.id];
+    if (!prev || score > prev.score) o[s.id] = { score, total };
+    store.set(key, o);
+  }
+  const next = STEPS[STEPS.indexOf(s) + 1];
+  const res = el("div", ok ? "keep" : "keep warn");
+  res.setAttribute("role", "status");
+  if (ok) {
+    res.innerHTML = `<span class="k">${isLesson ? "Leçon validée" : "Niveau " + (s.mi + 1) + " validé"}</span><p>${score} / ${total} bonnes réponses. ${isLesson ? "Tu peux passer à la suite." : "Bravo, tu as terminé ce niveau."}</p><div class="actions"></div>`;
+    const acts = $(".actions", res);
+    if (next) addBtn(acts, "btn btn-primary", `Suite : ${stepTitle(next)} →`, () => openStep(next));
+    addBtn(acts, next ? "btn btn-plain" : "btn btn-primary", "Retour au parcours", closeStep);
+  } else {
+    res.innerHTML = `<span class="k">Pas encore</span><p>${score} / ${total}. Il faut au moins ${needed(total)} bonnes réponses. ${isLesson ? "Relis la leçon puis réessaie." : "Relis les leçons de ce niveau puis réessaie."}</p><div class="actions"></div>`;
+    const acts = $(".actions", res);
+    addBtn(acts, "btn btn-primary", "Réessayer", () => openStep(s));
+    addBtn(acts, "btn btn-plain", "Retour au parcours", closeStep);
+  }
+  host.appendChild(res);
+  res.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function closeStep() {
+  $("#step-view").classList.add("hidden");
+  $("#path-view").classList.remove("hidden");
+  renderPath();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Révisions ---------- */
+function reviewPool() { const out = []; STEPS.forEach(s => { if (stepDone(s)) out.push(...questionsOf(s)); }); return out; }
+
+function renderReview() {
+  const box = $("#review-box"), pool = reviewPool();
+  const missedIds = store.get("missed", []), missedQs = ALL_Q.filter(q => missedIds.includes(q.id));
+  const best = store.get("reviewBest", null);
+  box.innerHTML = `<h2 class="title-l">Révisions</h2>`;
+  if (!pool.length) {
+    const k = el("div", "keep", `<span class="k">Bientôt disponible</span><p>Valide ta première leçon pour débloquer les révisions : tu pourras rejouer des questions au hasard et retravailler tes erreurs.</p><div class="actions"></div>`);
+    const a = el("a", "btn btn-primary", "Aller au parcours"); a.href = "#learn";
+    $(".actions", k).appendChild(a);
+    box.appendChild(k);
+    return;
+  }
+  box.appendChild(el("p", "muted", "Tu vois la bonne réponse et l'explication dès que tu réponds. Les questions portent uniquement sur ce que tu as déjà étudié."));
+  const modes = el("div", "rev-modes");
+  const n = Math.min(10, pool.length);
+  const c1 = el("button", "glass rev-card", `<span class="title-m">Quiz de révision</span><span class="caption">${n} questions au hasard${best != null ? ` · meilleur score : ${best} %` : ""}</span>`);
+  c1.type = "button"; c1.addEventListener("click", () => startReview(shuffle(pool).slice(0, n), "random"));
+  const c2 = el("button", "glass rev-card", `<span class="title-m">Revoir mes erreurs</span><span class="caption">${missedQs.length ? missedQs.length + " question" + (missedQs.length > 1 ? "s" : "") + " à retravailler" : "Aucune erreur à revoir pour le moment"}</span>`);
+  c2.type = "button"; c2.disabled = !missedQs.length;
+  c2.addEventListener("click", () => startReview(shuffle(missedQs).slice(0, 10), "errors"));
+  modes.append(c1, c2);
+  box.appendChild(modes);
+}
+
+function startReview(qs, kind) {
+  reviewBusy = true;
+  const box = $("#review-box");
+  box.innerHTML = `<button class="btn btn-plain btn-sm" id="rev-back" type="button">← Révisions</button><h2 class="title-l"></h2><div id="rev-host"></div>`;
+  $("h2", box).textContent = kind === "errors" ? "Revoir mes erreurs" : "Quiz de révision";
+  $("#rev-back").onclick = () => { reviewBusy = false; renderReview(); };
+  runQuiz($("#rev-host"), qs, (score, total, host) => {
+    const p = Math.round(100 * score / total);
+    if (kind === "random") { const b = store.get("reviewBest", null); if (b == null || p > b) store.set("reviewBest", p); }
+    const res = el("div", p >= 65 ? "keep" : "keep warn", `<span class="k">Résultat</span><p>${score} / ${total}. ${p >= 65 ? "Très bien, tu maîtrises ces notions." : "Continue à t'entraîner : relis les leçons concernées puis réessaie."}</p><div class="actions"></div>`);
+    res.setAttribute("role", "status");
+    const acts = $(".actions", res);
+    addBtn(acts, "btn btn-primary", "Rejouer", () => { reviewBusy = false; renderReview(); });
+    host.appendChild(res);
+    res.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  });
 }
 
 /* ---------- Glossaire ---------- */
@@ -277,7 +406,7 @@ function calcRisk() {
   else if (rr != null && isNaN(rr)) say("L'objectif doit être du bon côté de l'entrée (au-dessus pour un achat, en dessous pour une vente).", true);
   else if (rr != null && rr < 2) say("Ratio gain/risque inférieur à 2 : ce trade est peu attractif en théorie.");
 }
-$$("#tab-risk input").forEach(i => i.addEventListener("input", calcRisk));
+$$("#tool-calc input").forEach(i => i.addEventListener("input", calcRisk));
 
 /* ================= SIMULATEUR ================= */
 const FEE = 0.001;
@@ -479,7 +608,7 @@ function showResult() {
   const tips = [];
   if (n === 0) tips.push("Tu n'as pris aucune position. Rester à l'écart est une décision valable, mais pour progresser, teste de petites positions avec un stop.");
   if (n > 12) tips.push(`${n} trades clôturés en 120 jours : attention au surtrading, les frais (${eur(sim.fees)}) pèsent sur ta performance.`);
-  if (n > 0 && !sim.usedStop) tips.push("Tu n'as jamais utilisé de stop-loss. Définis ta perte maximale avant d'entrer (voir la leçon 7).");
+  if (n > 0 && !sim.usedStop) tips.push("Tu n'as jamais utilisé de stop-loss. Définis ta perte maximale avant d'entrer (voir la leçon « Gestion du risque »).");
   if (mdd > 15) tips.push(`Ton capital a connu une baisse maximale de ${num(mdd, 1)} %. Réduis la taille de tes positions pour mieux supporter les creux.`);
   if (n >= 3 && wins / n < 0.4 && ret > 0) tips.push("Peu de trades gagnants mais un résultat positif : tes gains sont plus gros que tes pertes, c'est le bon réflexe.");
   if (n >= 3 && wins / n >= 0.5 && ret < 0) tips.push("Tu as souvent raison mais tu perds de l'argent : tes pertes sont plus grandes que tes gains. Coupe plus vite les positions perdantes.");
@@ -718,8 +847,6 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
 }
 
 /* ---------- Initialisation ---------- */
-renderLessons();
-newQuiz();
 renderGlossary();
 calcRisk();
 applyTheme();

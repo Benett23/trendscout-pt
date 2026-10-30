@@ -3,9 +3,11 @@
 Application web pédagogique en français, sans dépendance ni étape de build. Elle fonctionne sur **ordinateur et mobile**, peut s'**installer comme une vraie application** et marche **hors ligne** une fois chargée. Design « Verre » (clair et sombre, police Inter embarquée).
 
 ## Contenu
-- **Apprendre** : 10 leçons avec mini-quiz et progression sauvegardée.
-- **Simulateur** : 10 000 € virtuels sur un marché fictif. Chandeliers (hausse creuse, baisse pleine), SMA 20/50, RSI 14, ordres, stop-loss et objectif (gaps gérés), frais 0,1 %, repères d'achat/vente, journal, bilan avec courbe de capital et conseils.
-- **Quiz** : 10 questions aléatoires. **Calculateur** : taille de position avec schéma. **Glossaire** : 42 termes.
+- **Parcours** : 4 niveaux (Les bases · Passer des ordres sans se ruiner · Analyser un marché · Investir sur la durée), 10 leçons et un examen de 6 questions à la fin de chaque niveau. Verrouillage souple : l'étape suivante se débloque quand la précédente est validée, avec un bouton « Je connais déjà ». Validation à environ deux tiers de bonnes réponses.
+- **Quiz en direct** : chaque question s'affiche seule, la bonne réponse et l'explication apparaissent dès que tu réponds.
+- **Pratique** : simulateur avec 10 000 € virtuels sur un marché fictif. Chandeliers (hausse creuse, baisse pleine), SMA 20/50, RSI 14, ordres, stop-loss et objectif (gaps gérés), frais 0,1 %, repères d'achat/vente, journal, bilan avec courbe de capital et conseils.
+- **Révisions** : quiz au hasard sur ce qui a été étudié, et reprise des questions ratées.
+- **Outils** : calculateur de taille de position avec schéma, glossaire de 42 termes.
 
 **Site en ligne** : https://benett23.github.io/trendscout-pt/
 

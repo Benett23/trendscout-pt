@@ -17,7 +17,7 @@ const LESSONS = [
       </ul>
       <h4>Le carnet d'ordres</h4>
       <p>Chaque titre a un carnet d'ordres : à gauche les acheteurs (prix <em>bid</em>), à droite les vendeurs (prix <em>ask</em>). L'écart entre les deux s'appelle le <strong>spread</strong>. Une transaction a lieu quand un acheteur et un vendeur s'accordent sur un prix.</p>
-      <div class="keep"><span class="k">À retenir</span><p>À retenir : en bourse, il n'y a pas de gain garanti. Le prix monte parce que plus de gens veulent acheter que vendre, et inversement.</p></div>`,
+      <div class="keep"><span class="k">À retenir</span><p>En bourse, il n'y a pas de gain garanti. Le prix monte parce que plus de gens veulent acheter que vendre, et inversement.</p></div>`,
     quiz: [
       { q: "Qu'est-ce qu'une action ?", o: ["Un prêt fait à une entreprise", "Une part du capital d'une entreprise", "Une assurance contre les pertes", "Un contrat à durée limitée"], a: 1, e: "Une action représente une fraction de propriété de l'entreprise. Un prêt, c'est une obligation." },
       { q: "Qu'est-ce que le spread ?", o: ["L'écart entre le prix d'achat (ask) et de vente (bid)", "Le dividende annuel", "La commission du courtier", "La variation sur une journée"], a: 0, e: "Le spread est la différence entre le meilleur prix vendeur et le meilleur prix acheteur." },
@@ -62,7 +62,7 @@ const LESSONS = [
       <p>Une longue mèche haute = les acheteurs ont poussé, mais les vendeurs ont repris la main (rejet du haut). Une longue mèche basse = rebond après une baisse.</p>
       <h4>Les échelles de temps</h4>
       <p>Le graphique journalier donne une vision de moyen terme. Plus l'unité de temps est courte, plus il y a de « bruit » (mouvements aléatoires sans signification). Un débutant a tout intérêt à travailler sur des échelles <strong>journalières ou hebdomadaires</strong>.</p>
-      <div class="keep"><span class="k">À essayer</span><p>Dans l'onglet <em>Simulateur</em>, survole le graphique pour voir O/H/L/C de chaque bougie.</p></div>`,
+      <div class="keep"><span class="k">À essayer</span><p>Dans l'onglet <em>Pratique</em>, survole le graphique pour voir O/H/L/C de chaque bougie.</p></div>`,
     quiz: [
       { q: "Un chandelier haussier signifie que…", o: ["La clôture est supérieure à l'ouverture", "La clôture est inférieure à l'ouverture", "Le volume est élevé", "Le plus haut égale l'ouverture"], a: 0, e: "Haussier = le prix a fini plus haut qu'il n'a commencé la période." },
       { q: "Que représentent les mèches ?", o: ["Les dividendes", "Les extrêmes (plus haut / plus bas) atteints pendant la période", "Le volume échangé", "Les frais"], a: 1, e: "Les mèches montrent jusqu'où le prix est allé avant de revenir vers le corps." },
@@ -147,7 +147,7 @@ const LESSONS = [
       <p>Ne risque jamais plus de 1 à 2 % de ton capital sur un seul trade. Avec 10 000 € et 1 % de risque, tu acceptes de perdre au maximum 100 € si ton stop est touché.</p>
       <h4>Taille de position</h4>
       <p><code>Quantité = risque en € / (prix d'entrée − stop)</code></p>
-      <p>Exemple : risque 100 €, entrée 50 €, stop 48 € → 100 / 2 = <strong>50 actions</strong>. Utilise l'onglet <em>Calculateur</em>.</p>
+      <p>Exemple : risque 100 €, entrée 50 €, stop 48 € → 100 / 2 = <strong>50 actions</strong>. Utilise le calculateur (onglet <em>Outils</em>).</p>
       <h4>Ratio gain/risque (R/R)</h4>
       <p>Vise des trades où le gain potentiel est au moins 2 fois le risque. Avec un R/R de 2, tu peux te tromper une fois sur deux et rester gagnant (avant frais).</p>
       <h4>L'asymétrie des pertes</h4>
@@ -238,6 +238,59 @@ const LESSONS = [
       { q: "Quel est le critère le plus important pour choisir un ETF ?", o: ["La couleur du logo de l'émetteur", "L'indice qu'il réplique", "Le nombre de ses publicités", "Son prix unitaire"], a: 1, e: "L'indice détermine ce que tu détiens réellement : c'est le premier critère, avant les frais et la taille." },
       { q: "Que mesure le TER d'un ETF ?", o: ["Ses frais de gestion annuels", "Son rendement garanti", "Le nombre de titres détenus", "Sa liquidité"], a: 0, e: "Le TER (Total Expense Ratio) correspond aux frais courants annuels, prélevés dans la valeur du fonds." },
       { q: "Un ETF à capitalisation…", o: ["Verse les dividendes sur ton compte", "Réinvestit automatiquement les dividendes", "Garantit le capital", "N'est jamais éligible au PEA"], a: 1, e: "À capitalisation, les dividendes sont réinvestis dans le fonds ; à distribution, ils te sont versés." }
+    ]
+  }
+];
+
+// Parcours : 4 niveaux, chacun terminé par un examen de 6 questions nouvelles.
+// L'ordre des leçons suit la progression conseillée (la gestion du risque passe avant l'analyse).
+const MODULES = [
+  {
+    id: "n1", title: "Les bases", goal: "Comprendre ce qu'est la bourse, les principaux produits et lire un graphique.",
+    lessons: ["bourse", "produits", "graphique"],
+    exam: [
+      { q: "Une entreprise cotée émet des actions principalement pour…", o: ["Rembourser ses actionnaires", "Lever des capitaux sans emprunter", "Réduire ses impôts", "Fixer le prix de ses produits"], a: 1, e: "En vendant des parts de son capital, l'entreprise obtient des fonds sans avoir à les rembourser comme une dette." },
+      { q: "Quelle est la différence entre un dividende et une plus-value ?", o: ["Le dividende vient de la revente, la plus-value du bénéfice", "Le dividende est versé par l'entreprise, la plus-value vient d'une revente à un prix plus élevé", "Il n'y a aucune différence", "La plus-value est toujours garantie"], a: 1, e: "Le dividende est une part des bénéfices distribuée. La plus-value est le gain réalisé en revendant plus cher qu'à l'achat." },
+      { q: "Pourquoi un ETF large est-il moins risqué qu'une seule action ?", o: ["Il est garanti par l'État", "Il répartit l'investissement sur de nombreuses entreprises", "Il ne baisse jamais", "Il est géré par des experts qui battent toujours le marché"], a: 1, e: "La diversification réduit l'impact d'une mauvaise performance isolée. Elle ne supprime pas le risque de marché." },
+      { q: "Sur un chandelier, une très longue mèche haute indique que…", o: ["Le volume était nul", "Le prix est monté haut puis a été repoussé vers le bas", "L'entreprise a versé un dividende", "Le marché était fermé"], a: 1, e: "Les acheteurs ont poussé le prix vers le haut, mais les vendeurs ont repris la main avant la clôture." },
+      { q: "Une obligation rapporte en général…", o: ["Des dividendes variables", "Des intérêts (coupons) fixés à l'avance", "Une part des bénéfices", "Rien, sauf si le prix monte"], a: 1, e: "L'émetteur verse un coupon et rembourse le capital à l'échéance, sauf défaut." },
+      { q: "Pourquoi un débutant a-t-il intérêt à regarder le graphique journalier plutôt que celui à la minute ?", o: ["Les frais disparaissent", "Il y a moins de bruit aléatoire et moins de décisions impulsives", "Les prix sont garantis", "C'est obligatoire"], a: 1, e: "Sur de courtes échelles, le hasard domine et on est tenté de trader trop souvent." }
+    ]
+  },
+  {
+    id: "n2", title: "Passer des ordres sans se ruiner", goal: "Acheter, vendre, limiter ses pertes et garder la tête froide.",
+    lessons: ["ordres", "risque", "psycho"],
+    exam: [
+      { q: "Tu veux acheter à 40 € maximum, quitte à ne pas être exécuté. Quel ordre utilises-tu ?", o: ["Au marché", "À cours limité", "Stop", "Aucun"], a: 1, e: "L'ordre à cours limité garantit que tu ne paies pas plus que ton prix, mais il peut ne jamais être exécuté." },
+      { q: "Capital 5 000 €, risque 2 % par trade. Quelle perte maximale acceptes-tu sur ce trade ?", o: ["10 €", "50 €", "100 €", "500 €"], a: 2, e: "2 % de 5 000 € = 100 €." },
+      { q: "Entrée 20 €, stop 18 €, perte maximale 60 €. Combien de titres peux-tu prendre ?", o: ["15", "30", "60", "120"], a: 1, e: "Risque par titre = 2 €. 60 / 2 = 30 titres." },
+      { q: "Un trade a un ratio gain/risque de 1:2. Si tu risques 50 €, le gain visé est de…", o: ["25 €", "50 €", "100 €", "200 €"], a: 2, e: "Un ratio de 1:2 signifie que le gain visé vaut 2 fois le risque : 2 x 50 € = 100 €." },
+      { q: "Tu viens de perdre sur un trade et tu doubles la mise sur le suivant pour te refaire. C'est…", o: ["Une bonne gestion du risque", "Du revenge trading", "De la diversification", "Un ordre limité"], a: 1, e: "Augmenter le risque pour récupérer une perte est une des causes principales de ruine." },
+      { q: "Comment limiter l'impact d'un gap défavorable (ouverture bien en dessous de ton stop) ?", o: ["Ne jamais placer de stop", "Réduire la taille de la position", "Acheter davantage", "Ignorer les annonces"], a: 1, e: "Un gap peut sauter ton stop. Une position plus petite limite la perte réelle." }
+    ]
+  },
+  {
+    id: "n3", title: "Analyser un marché", goal: "Repérer une tendance, utiliser les indicateurs et évaluer une entreprise.",
+    lessons: ["technique", "fondamentale"],
+    exam: [
+      { q: "Le prix casse une résistance et la dépasse. Que devient souvent ce niveau ?", o: ["Il disparaît", "Un support", "Une moyenne mobile", "Un dividende"], a: 1, e: "Un niveau cassé change souvent de rôle : l'ancienne résistance devient un support." },
+      { q: "La SMA 20 passe au-dessus de la SMA 50. Ce signal est…", o: ["Une garantie de hausse", "Un signal haussier classique, mais fragile en marché latéral", "Un signal de vente certain", "Sans rapport avec la tendance"], a: 1, e: "Il peut annoncer une hausse, mais il produit beaucoup de faux signaux quand le marché oscille sans direction." },
+      { q: "Un RSI à 25 signifie…", o: ["Que le prix va forcément monter", "Que le titre est en zone « survendue », sans garantie de rebond", "Que l'entreprise est en faillite", "Que le volume est faible"], a: 1, e: "Le RSI mesure la force récente du mouvement. Une zone extrême n'est pas un signal de retournement automatique." },
+      { q: "Une entreprise affiche un PER de 8 dans un secteur où la moyenne est 20. Que peut-on dire ?", o: ["Qu'elle est forcément sous-évaluée", "Qu'elle est peut-être bon marché, ou en difficulté : il faut chercher pourquoi", "Qu'elle est trop chère", "Que son dividende est élevé"], a: 1, e: "Un PER bas peut être une aubaine ou le signe d'un déclin attendu des bénéfices." },
+      { q: "Pourquoi compare-t-on le PER d'une entreprise à celui de son secteur ?", o: ["Les secteurs ont des niveaux de valorisation différents", "Pour calculer le dividende", "Pour connaître l'encours", "Parce que c'est obligatoire"], a: 0, e: "Un PER de 25 est courant dans certains secteurs de croissance et élevé dans d'autres." },
+      { q: "En tendance baissière, un trader prudent…", o: ["Achète à chaque petite hausse sans stop", "Évite de lutter contre la tendance et réduit son risque", "Double sa position", "N'utilise jamais d'indicateurs"], a: 1, e: "Aller contre la tendance expose à des pertes répétées : mieux vaut réduire la taille ou rester à l'écart." }
+    ]
+  },
+  {
+    id: "n4", title: "Investir sur la durée", goal: "Choisir ses ETF, comprendre les enveloppes et maîtriser les frais.",
+    lessons: ["etf", "fiscalite"],
+    exam: [
+      { q: "Deux ETF suivent le même indice : l'un a 0,20 % de frais par an, l'autre 0,60 %. Lequel est préférable, toutes choses égales ?", o: ["Celui à 0,60 %", "Celui à 0,20 %", "Aucun écart", "Celui au nom le plus long"], a: 1, e: "À performance égale, des frais plus faibles laissent plus de rendement à l'investisseur, année après année." },
+      { q: "Un ETF à distribution…", o: ["Réinvestit les dividendes", "Verse les dividendes aux porteurs", "Garantit un revenu fixe", "Est interdit dans un PEA"], a: 1, e: "À distribution, les dividendes te sont versés ; à capitalisation, ils sont réinvestis." },
+      { q: "Pour être éligible au PEA, un ETF doit notamment être investi à…", o: ["100 % en obligations", "Au moins 75 % en actions européennes", "Au moins 50 % en cryptomonnaies", "Aucune condition"], a: 1, e: "C'est une condition d'éligibilité. Vérifie toujours la fiche du fonds." },
+      { q: "Que mesure l'encours d'un ETF ?", o: ["Son rendement annuel", "Le montant total qu'il gère", "Son nombre de lignes", "Ses frais"], a: 1, e: "L'encours est la somme des actifs gérés par le fonds. Un fonds très petit risque d'être fermé." },
+      { q: "Pourquoi les frais annuels comptent-ils sur le long terme ?", o: ["Ils sont remboursés", "Ils sont prélevés chaque année et s'accumulent, ce qui réduit le rendement", "Ils augmentent le rendement", "Ils sont fixes pour toujours"], a: 1, e: "Les gains sont incertains, les frais sont certains. Avec les intérêts composés, l'écart grandit avec le temps." },
+      { q: "Un portefeuille investi dans un seul ETF « monde » est…", o: ["Sans aucun risque", "Très diversifié, mais exposé aux baisses du marché", "Garanti par l'indice", "Réservé aux professionnels"], a: 1, e: "La diversification réduit le risque propre à une entreprise, pas le risque de marché." }
     ]
   }
 ];

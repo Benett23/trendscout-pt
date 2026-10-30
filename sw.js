@@ -1,6 +1,6 @@
 // Service worker : permet d'utiliser l'application hors ligne une fois chargée.
 // Stratégie « réseau d'abord, cache en secours » : les mises à jour arrivent dès qu'il y a du réseau.
-const CACHE = "trendscout-v1";
+const CACHE = "trendscout-v2";
 const ASSETS = [
   "./", "index.html", "tokens.css", "app.css", "app.js", "data.js", "manifest.webmanifest",
   "fonts/inter-latin.woff2", "fonts/inter-latin-ext.woff2",
